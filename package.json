@@ -1,0 +1,17 @@
+{
+  "name": "@voyage/workspace",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "format": "npx prettier --write '{packages,scripts,examples}/**/*.{js,ts}'",
+    "test": "npm --workspaces test",
+    "test:e2e": "node test {path}"
+  },
+  "workspaces": [
+    "packages/framework-core",
+    "packages/runtime"
+  ],
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

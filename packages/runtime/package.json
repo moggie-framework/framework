@@ -1,0 +1,25 @@
+{
+  "name": "@voyage/runtime",
+  "version": "0.1.0",
+  "description": "Enable stage-3 proposals in regular code, used by Voyage framework",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --import './index.js' --enable-source-maps --test"
+  },
+  "keywords": [
+    "runtime",
+    "voyage",
+    "stage-3",
+    "decorators"
+  ],
+  "author": "Louis Capitanchik <louis@microhacks.co.uk>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@swc/core": "^1.7.26",
+    "oxc-transform": "^0.30.5"
+  },
+  "exports": {
+    ".": "./index.js"
+  }
+}

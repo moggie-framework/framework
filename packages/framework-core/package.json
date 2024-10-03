@@ -1,0 +1,19 @@
+{
+  "name": "@voyage/core",
+  "version": "0.1.0",
+  "description": "Core components for Voyage apps",
+  "main": "index.js",
+  "type": "module",
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test --enable-source-maps --import @voyage/runtime"
+  },
+  "keywords": [
+    "framework",
+    "voyage",
+    "di",
+    "ioc"
+  ],
+  "author": "Louis Capitanchik <louis@microhacks.co.uk>",
+  "license": "Apache-2.0"
+}
