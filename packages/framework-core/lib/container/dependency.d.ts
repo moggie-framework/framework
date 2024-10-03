@@ -15,6 +15,7 @@
  */
 
 import type { Container } from "./resolver"
+import type { Class } from "@voyage/helpers/types"
 
 export class DependencyBuilder {
 	constructor(name: string, container: Container)
@@ -23,36 +24,24 @@ export class DependencyBuilder {
 	 *
 	 * Mapping the same type as a singleton into a cloned container will result in a _new_ instance of that
 	 * singleton being created by the cloned container
-	 *
-	 * @param {new () => any} clazz
-	 * @returns {Container}
 	 */
-	singleton(clazz: new () => any): Container
+	singleton(clazz: Class<any>): Container
 	/**
 	 * Map a type that should be constructed every time the dependency is resolved within the lifetime of
 	 * it's registered container
-	 *
-	 * @param {new () => any} clazz
-	 * @returns {Container}
 	 */
-	instance(clazz: new () => any): Container
+	instance(clazz: Class<any>): Container
 	/**
 	 * Map a type that should be constructed using a factory function whenever the dependency is resolved within
 	 * the lifetime of it's registered container. If the function has been patched to container dependencies, those
 	 * will be resolved and passed to it. If not, it will receive the container instance.
 	 *
 	 * Async & Sync functions are supported
-	 *
-	 * @param {Function} factory
-	 * @returns {Container}
 	 */
 	result(factory: Function): Container
 	/**
 	 * Map a single value that will be returned whenever the dependency is resolved within the lifetime of
 	 * it's registered container
-	 *
-	 * @param {any} value
-	 * @returns {Container}
 	 */
 	value(value: any): Container
 }

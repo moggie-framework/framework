@@ -6,7 +6,7 @@
   "type": "module",
   "devDependencies": {},
   "scripts": {
-    "test": "node --test --enable-source-maps --import @voyage/runtime"
+    "test": "node --test --experimental-test-coverage --enable-source-maps --import @voyage/runtime"
   },
   "keywords": [
     "framework",

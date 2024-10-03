@@ -14,7 +14,4 @@
  * limitations under the License.
  */
 
-export * from "./lib/container.js"
-export * from "./lib/decorators.js"
-export * from "./lib/const.js"
-export * from "./lib/objects.js"
+export type Class<T, Args extends Array<any> = any[]> = new (...args: Args) => T

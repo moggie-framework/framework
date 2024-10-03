@@ -17,3 +17,4 @@
 export * from "./lib/container.js"
 export * from "./lib/decorators.js"
 export * from "./lib/const.js"
+export * from "./lib/objects.js"

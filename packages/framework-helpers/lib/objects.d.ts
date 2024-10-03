@@ -14,7 +14,21 @@
  * limitations under the License.
  */
 
-export * from "./lib/container.js"
-export * from "./lib/decorators.js"
-export * from "./lib/const.js"
-export * from "./lib/objects.js"
+export function getNestedKey<OutT = any>(object: object, path: string): OutT
+export function setNestedKey(object: object, path: string, value: any)
+
+export function isPlainObject(obj: any): obj is object
+
+export function deepAssign(
+	target: null | undefined,
+	source: null | undefined,
+): null
+export function deepAssign(target: object, source: object): object
+export function deepAssign<Source = object>(
+	target: null | undefined,
+	source: Source,
+): Source
+export function deepAssign<Target = object>(
+	target: Target,
+	source: null | undefined,
+): Target
