@@ -14,5 +14,7 @@
  * limitations under the License.
  */
 
-import type { LoadHook } from "node:module"
-export const load: LoadHook
+export const Semantics = {
+	Alias: Symbol("Container Alias"),
+	Requires: Symbol("Instance Dependencies"),
+}

@@ -14,5 +14,10 @@
  * limitations under the License.
  */
 
-import type { LoadHook } from "node:module"
-export const load: LoadHook
+declare const AliasSymbol: unique symbol
+declare const RequiresSymbol: unique symbol
+
+export type Semantics = {
+	Alias: typeof AliasSymbol
+	Requires: typeof RequiresSymbol
+}

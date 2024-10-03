@@ -14,5 +14,6 @@
  * limitations under the License.
  */
 
-import type { LoadHook } from "node:module"
-export const load: LoadHook
+export * from "./lib/container.js"
+export * from "./lib/decorators.js"
+export * from "./lib/const.js"

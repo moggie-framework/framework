@@ -24,41 +24,41 @@ const supportedFileGlobs = [".js", ".jsx", ".ts", ".tsx"]
  * @type {LoadHook} load
  */
 const load = async function load(url, context, nextLoad) {
-    if (
-        url.startsWith("file:") &&
-        supportedFileGlobs.some(glob => url.endsWith(glob))
-    ) {
-        const path = new URL(url)
-        let file = (await readFile(path, "utf8")).toString()
-        const transformed = await transform(file, {
-            filename: path.pathname,
-            sourceMaps: "inline",
-            swcrc: false,
-            isModule: context.format === "module",
-            jsc: {
-                transform: {
-                    decoratorVersion: "2022-03",
-                    useDefineForClassFields: false,
-                    optimizer: {
-                        simplify: true,
-                    },
-                },
-                target: "es2020",
-                parser: {
-                    syntax: "typescript",
-                    decorators: true,
-                },
-            },
-        })
+	if (
+		url.startsWith("file:") &&
+		supportedFileGlobs.some(glob => url.endsWith(glob))
+	) {
+		const path = new URL(url)
+		let file = (await readFile(path, "utf8")).toString()
+		const transformed = await transform(file, {
+			filename: path.pathname,
+			sourceMaps: "inline",
+			swcrc: false,
+			isModule: context.format === "module",
+			jsc: {
+				transform: {
+					decoratorVersion: "2022-03",
+					useDefineForClassFields: false,
+					optimizer: {
+						simplify: true,
+					},
+				},
+				target: "es2020",
+				parser: {
+					syntax: "typescript",
+					decorators: true,
+				},
+			},
+		})
 
-        return {
-            format: context.format,
-            shortCircuit: true,
-            source: transformed.code,
-        }
-    }
+		return {
+			format: context.format,
+			shortCircuit: true,
+			source: transformed.code,
+		}
+	}
 
-    return nextLoad(url, context)
+	return nextLoad(url, context)
 }
 
 export { load }
