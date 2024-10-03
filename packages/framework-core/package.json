@@ -19,5 +19,11 @@
     "@voyage/runtime": "^0.1.0"
   },
   "author": "Louis Capitanchik <louis@microhacks.co.uk>",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "exports": {
+    "./framework": {
+      "default": "./exports/framework.js",
+      "types": "./exports/framework.d.ts"
+    }
+  }
 }
