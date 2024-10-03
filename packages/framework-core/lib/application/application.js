@@ -16,7 +16,7 @@
 
 import { EventEmitter } from "node:events"
 import pathUtil from "node:path"
-import { deepAssign, isPlainObject } from "@voyage/helpers"
+import {createCallableAccessor, deepAssign, isPlainObject} from "@voyage/helpers"
 import { Container } from "../container/resolver.js"
 import { tryLoadConfigFiles } from "./configuration.js"
 
@@ -25,12 +25,24 @@ export class Application extends EventEmitter {
 		return pathUtil.resolve(this.opts.configRoot || "config")
 	}
 
+    get config() {
+        return createCallableAccessor(this.$config, { shouldReplaceNull: true})
+    }
+
 	constructor(opts = {}) {
 		super()
 		this.opts = opts
+        this.$config = {}
 		this.$container = new Container()
 		this.$plugins = []
+
+        this.setDefaults()
 	}
+
+    setDefaults() {
+        this.$container.when("app").value(this)
+        this.$container.when("config").result(() => this.config)
+    }
 
 	loadEnvironment() {
 		if (this.opts.disable?.env) {
@@ -78,6 +90,7 @@ export class Application extends EventEmitter {
 		if (isPlainObject(this.opts.config)) {
 			deepAssign(config, this.opts.config)
 		}
+        this.$config = config
 	}
 
 	register(...plugins) {
@@ -88,6 +101,8 @@ export class Application extends EventEmitter {
 
 	async boot() {
 		this.loadEnvironment()
+        await this.loadConfig()
+
 		this.emit("app:booting")
 		for (const plugin of this.$plugins) {
 			await plugin.boot(this.$container)

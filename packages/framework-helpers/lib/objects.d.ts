@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import {Class} from "../types";
+
 export function getNestedKey<OutT = any>(object: object, path: string): OutT
 export function setNestedKey(object: object, path: string, value: any)
 
@@ -32,3 +34,17 @@ export function deepAssign<Target = object>(
 	target: Target,
 	source: null | undefined,
 ): Target
+
+export function setClassName(clazz: Class<any>, name: string)
+
+export type CallableAccessorOptions<NullValue extends boolean = boolean> = {
+    shouldReplaceNull?: NullValue;
+}
+
+declare function Accessor(path: string): any | undefined | null
+declare function Accessor<Default>(path: string, fallback: Default): any | null
+declare function AccessorWithoutNull<Default>(path: string, fallback: Default): Default
+
+export function createCallableAccessor(object: object): typeof Accessor
+export function createCallableAccessor(object: Object, options: CallableAccessorOptions<false>): typeof Accessor
+export function createCallableAccessor(object: Object, options: CallableAccessorOptions<true>): typeof AccessorWithoutNull

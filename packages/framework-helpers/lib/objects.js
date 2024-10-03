@@ -118,3 +118,43 @@ export function deepAssign(target, source) {
 export function setClassName(clazz, name) {
 	Object.defineProperty(clazz, "name", { value: name })
 }
+
+/**
+ * Ensure the string contains any characters separated by a dot
+ * Ending or starting with a dot is not valid as an accessor
+ *
+ * @type {RegExp}
+ */
+const CONTAINER_PATH_ACCESSOR = /[^.]\.[^.]/
+
+/**
+ * Enable callable syntax to access nested properties of a given object. The accessor supports dot syntax strings
+ * for nested properties, and can be provided a fallback value to return instead of undefined, and optionally null
+ *
+ * @param {any} obj
+ * @param {{shouldReplaceNull?: boolean}} opts
+ * @returns {(function(string, any | undefined): any)}
+ */
+export function createCallableAccessor(obj, opts) {
+    obj = isPlainObject(obj) ? obj : {}
+    const shouldReplaceNull = opts?.shouldReplaceNull ?? false
+    const accessor = (path, fallback) => {
+        const value = getNestedKey(obj, path);
+        if (value === undefined) {
+            return fallback
+        } else if (shouldReplaceNull && value === null) {
+            return fallback ?? null
+        }
+        return value
+    }
+
+    return new Proxy(accessor, {
+        get(target, prop) {
+            if (Reflect.has(obj, prop)) {
+                return Reflect.get(obj, prop)
+            } else if (CONTAINER_PATH_ACCESSOR.test(prop)) {
+                return getNestedKey(obj, prop)
+            }
+        }
+    })
+}
