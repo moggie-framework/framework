@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { describe, it } from "node:test"
-import { hasDependencies, resolveName } from "../container.js"
 import assert from "node:assert/strict"
+import {dependenciesOf, hasDependencies, resolveName} from "../container.js"
 import { alias, depends } from "../decorators.js"
 
 describe("Name resolution", () => {
@@ -37,7 +36,14 @@ describe("Name resolution", () => {
 })
 
 describe("Dependency resolution", () => {
-	it("Correctly identifies any type has dependencies", () => {
+	it("Correctly fetches dependencies for classes", () => {
+		@depends("foo", "bar")
+		class TestClass {}
+
+		assert.deepEqual(dependenciesOf(TestClass), ["foo", "bar"])
+	})
+
+	it("Correctly identifies classes or function types have dependencies", () => {
 		const inject = depends("foo")
 
 		class TestClass {}
@@ -58,10 +64,12 @@ describe("Dependency resolution", () => {
 
 		assert(hasDependencies(TestClass))
 		assert(hasDependencies(testFunction))
-		assert(hasDependencies(testString))
-		assert(hasDependencies(testNumber))
-		assert(hasDependencies(testBoolean))
-		assert(hasDependencies(testObject))
-		assert(hasDependencies(testArray))
+
+		// These types should not have dependencies assigned by the depends decorator
+		assert(!hasDependencies(testObject))
+		assert(!hasDependencies(testArray))
+		assert(!hasDependencies(testString))
+		assert(!hasDependencies(testNumber))
+		assert(!hasDependencies(testBoolean))
 	})
 })

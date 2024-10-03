@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "scripts": {
     "format": "npx prettier --write '{packages,scripts,examples}/**/*.{js,ts}'",
-    "test": "npm --workspaces test",
+    "test": "npm --workspaces test --experimental-test-coverage",
+    "test:direct": "node --test --experimental-test-coverage --enable-source-maps --import @voyage/runtime",
     "test:e2e": "node test {path}"
   },
   "workspaces": [

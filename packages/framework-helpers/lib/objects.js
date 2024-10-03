@@ -47,7 +47,7 @@ function _getNested(obj, path = []) {
  * @param {string} path
  * @returns {any}
  */
-export function getNestedKey(object, path) {
+export function getNestedValue(object, path) {
 	const pathParts = path.split(".")
 	return _getNested(object, pathParts)
 }
@@ -57,7 +57,7 @@ export function getNestedKey(object, path) {
  * @param {string} path
  * @param {any} value
  */
-export function setNestedKey(object, path, value) {
+export function setNestedValue(object, path, value) {
 	const pathParts = path.split(".")
 	const finalKey = pathParts.pop()
 
@@ -82,10 +82,13 @@ export function setNestedKey(object, path, value) {
 export function isPlainObject(obj) {
 	return (
 		typeof obj === "object" &&
-		obj != null && // Param is an object, but is not null
-		!Array.isArray(obj) && // Arrays have type "object"
-		(!Object.hasOwn(obj, "constructor") || obj.constructor === Object)
-	) // Either a null proto object, or a direct instance of Object
+		// Param is an object, but is not null
+		obj != null &&
+		// Arrays have type "object"
+		!Array.isArray(obj) &&
+		// Either a null proto object, or a direct instance of Object
+		(obj?.__proto__ == null || obj.constructor === Object)
+	)
 }
 
 /**
@@ -139,7 +142,7 @@ export function createCallableAccessor(obj, opts) {
     obj = isPlainObject(obj) ? obj : {}
     const shouldReplaceNull = opts?.shouldReplaceNull ?? false
     const accessor = (path, fallback) => {
-        const value = getNestedKey(obj, path);
+        const value = getNestedValue(obj, path);
         if (value === undefined) {
             return fallback
         } else if (shouldReplaceNull && value === null) {
@@ -153,7 +156,7 @@ export function createCallableAccessor(obj, opts) {
             if (Reflect.has(obj, prop)) {
                 return Reflect.get(obj, prop)
             } else if (CONTAINER_PATH_ACCESSOR.test(prop)) {
-                return getNestedKey(obj, prop)
+                return getNestedValue(obj, prop)
             }
         }
     })
