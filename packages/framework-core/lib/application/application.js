@@ -19,6 +19,7 @@ import pathUtil from "node:path"
 import {createCallableAccessor, deepAssign, isPlainObject} from "@voyage/helpers"
 import { Container } from "../container/resolver.js"
 import { tryLoadConfigFiles } from "./configuration.js"
+/** import { ApplicationEventMap } from "./application.js"; */
 
 export class Application extends EventEmitter {
 	get $configRoot() {
@@ -84,8 +85,11 @@ export class Application extends EventEmitter {
 			}
 			paths.push(...pluginPaths)
 		}
-		const loadedConfig = await tryLoadConfigFiles(this.$configRoot, paths)
-		deepAssign(config, loadedConfig)
+
+        if (!this.opts.disable?.fs) {
+            const loadedConfig = await tryLoadConfigFiles(this.$configRoot, paths)
+            deepAssign(config, loadedConfig)
+        }
 
 		if (isPlainObject(this.opts.config)) {
 			deepAssign(config, this.opts.config)

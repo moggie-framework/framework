@@ -43,8 +43,12 @@ export type CallableAccessorOptions<NullValue extends boolean = boolean> = {
 
 declare function Accessor(path: string): any | undefined | null
 declare function Accessor<Default>(path: string, fallback: Default): any | null
+declare function AccessorWithoutNull<Default>(path: string): Default | null | undefined
 declare function AccessorWithoutNull<Default>(path: string, fallback: Default): Default
 
+export type CallableAccessor = typeof Accessor & Record<string, any>
+export type CallableAccessorWithoutNull = typeof AccessorWithoutNull & Record<string, any>
+
 export function createCallableAccessor(object: object): typeof Accessor
-export function createCallableAccessor(object: Object, options: CallableAccessorOptions<false>): typeof Accessor
-export function createCallableAccessor(object: Object, options: CallableAccessorOptions<true>): typeof AccessorWithoutNull
+export function createCallableAccessor(object: Object, options: CallableAccessorOptions<false>): CallableAccessor
+export function createCallableAccessor(object: Object, options: CallableAccessorOptions<true>): CallableAccessorWithoutNull
