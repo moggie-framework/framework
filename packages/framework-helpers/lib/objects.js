@@ -139,25 +139,25 @@ const CONTAINER_PATH_ACCESSOR = /[^.]\.[^.]/
  * @returns {(function(string, any | undefined): any)}
  */
 export function createCallableAccessor(obj, opts) {
-    obj = isPlainObject(obj) ? obj : {}
-    const shouldReplaceNull = opts?.shouldReplaceNull ?? false
-    const accessor = (path, fallback) => {
-        const value = getNestedValue(obj, path);
-        if (value === undefined) {
-            return fallback
-        } else if (shouldReplaceNull && value === null) {
-            return fallback ?? null
-        }
-        return value
-    }
+	obj = isPlainObject(obj) ? obj : {}
+	const shouldReplaceNull = opts?.shouldReplaceNull ?? false
+	const accessor = (path, fallback) => {
+		const value = getNestedValue(obj, path)
+		if (value === undefined) {
+			return fallback
+		} else if (shouldReplaceNull && value === null) {
+			return fallback ?? null
+		}
+		return value
+	}
 
-    return new Proxy(accessor, {
-        get(target, prop) {
-            if (Reflect.has(obj, prop)) {
-                return Reflect.get(obj, prop)
-            } else if (CONTAINER_PATH_ACCESSOR.test(prop)) {
-                return getNestedValue(obj, prop)
-            }
-        }
-    })
+	return new Proxy(accessor, {
+		get(target, prop) {
+			if (Reflect.has(obj, prop)) {
+				return Reflect.get(obj, prop)
+			} else if (CONTAINER_PATH_ACCESSOR.test(prop)) {
+				return getNestedValue(obj, prop)
+			}
+		},
+	})
 }

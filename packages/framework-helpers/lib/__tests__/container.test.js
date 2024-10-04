@@ -15,7 +15,7 @@
  */
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
-import {dependenciesOf, hasDependencies, resolveName} from "../container.js"
+import { dependenciesOf, hasDependencies, resolveName } from "../container.js"
 import { alias, depends } from "../decorators.js"
 
 describe("Name resolution", () => {

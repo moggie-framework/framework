@@ -16,240 +16,271 @@
 
 import assert from "node:assert/strict"
 import { describe, it } from "node:test"
-import {createCallableAccessor, deepAssign, getNestedValue, isPlainObject} from "../objects.js"
+import {
+	createCallableAccessor,
+	deepAssign,
+	getNestedValue,
+	isPlainObject,
+} from "../objects.js"
 
 describe("Nested object accessor", () => {
-    it("Returns nested values", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        assert.equal(getNestedValue(obj, "a.b.c"), "value")
-    })
+	it("Returns nested values", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		assert.equal(getNestedValue(obj, "a.b.c"), "value")
+	})
 
-    it("Returns undefined when a path part is not found", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        assert.equal(getNestedValue(obj, "a.b.d"), undefined)
-    })
+	it("Returns undefined when a path part is not found", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		assert.equal(getNestedValue(obj, "a.b.d"), undefined)
+	})
 
-    it("Returns undefined for non-leaf missing path", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        assert.equal(getNestedValue(obj, "a.foo.b"), undefined)
-    })
+	it("Returns undefined for non-leaf missing path", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		assert.equal(getNestedValue(obj, "a.foo.b"), undefined)
+	})
 
-    it("Returns the root object for empty paths", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        assert.equal(getNestedValue(obj, ""), obj)
-    })
+	it("Returns the root object for empty paths", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		assert.equal(getNestedValue(obj, ""), obj)
+	})
 
-    it("Ignores empty path parts", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        assert.equal(getNestedValue(obj, "a..b.c"), "value")
-    })
+	it("Ignores empty path parts", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		assert.equal(getNestedValue(obj, "a..b.c"), "value")
+	})
 
-    it("Returns null for null values", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: null,
-                },
-            },
-        }
-        assert.equal(getNestedValue(obj, "a.b.c"), null)
-    })
+	it("Returns null for null values", () => {
+		const obj = {
+			a: {
+				b: {
+					c: null,
+				},
+			},
+		}
+		assert.equal(getNestedValue(obj, "a.b.c"), null)
+	})
 
-    it("Returns undefined when trying to access properties of null values", () => {
-        const obj = {
-            a: {
-                b: null,
-            },
-        }
-        assert.equal(getNestedValue(obj, "a.b.c"), undefined)
-    })
+	it("Returns undefined when trying to access properties of null values", () => {
+		const obj = {
+			a: {
+				b: null,
+			},
+		}
+		assert.equal(getNestedValue(obj, "a.b.c"), undefined)
+	})
 })
 
 describe("Deep assignment", () => {
-    it("Returns null if both inputs are not plain objects", () => {
-        class Foo {}
-        const matrixInput = [true, false, null, undefined, 0, "", Infinity, NaN, "a longer string", BigInt(1234), Foo]
-        const nameOf = thing => thing?.name ?? thing?.constructor?.name ?? typeof thing
+	it("Returns null if both inputs are not plain objects", () => {
+		class Foo {}
+		const matrixInput = [
+			true,
+			false,
+			null,
+			undefined,
+			0,
+			"",
+			Infinity,
+			NaN,
+			"a longer string",
+			BigInt(1234),
+			Foo,
+		]
+		const nameOf = thing =>
+			thing?.name ?? thing?.constructor?.name ?? typeof thing
 
-        for (const first of matrixInput) {
-            for (const second of matrixInput) {
-                assert.equal(deepAssign(first, second), null, `deepAssign(${nameOf(first)}, ${nameOf(second)}) should return null`)
-            }
-        }
-    })
+		for (const first of matrixInput) {
+			for (const second of matrixInput) {
+				assert.equal(
+					deepAssign(first, second),
+					null,
+					`deepAssign(${nameOf(first)}, ${nameOf(second)}) should return null`,
+				)
+			}
+		}
+	})
 
-    it("Merges simple flat objects", () => {
-        const obj1 = { a: 1, b: 2 }
-        const obj2 = { c: 3, d: 4 }
-        const result = deepAssign(obj1, obj2)
-        assert.deepEqual(result, { a: 1, b: 2, c: 3, d: 4 })
-    })
+	it("Merges simple flat objects", () => {
+		const obj1 = { a: 1, b: 2 }
+		const obj2 = { c: 3, d: 4 }
+		const result = deepAssign(obj1, obj2)
+		assert.deepEqual(result, { a: 1, b: 2, c: 3, d: 4 })
+	})
 
-    it("Mutates & returns the first input", () => {
-        const target = { a: 1, b: 2 }
-        const output = deepAssign(target, { c: 3, d: 4 })
-        assert(target === output)
-    })
+	it("Mutates & returns the first input", () => {
+		const target = { a: 1, b: 2 }
+		const output = deepAssign(target, { c: 3, d: 4 })
+		assert(target === output)
+	})
 
-    it("Merges & sets nested properties", () => {
-        const obj1 = { a: { b: 1 } }
-        const obj2 = { a: { c: 2 } }
-        const result = deepAssign(obj1, obj2)
-        assert.deepEqual(result, { a: { b: 1, c: 2 } })
-    })
+	it("Merges & sets nested properties", () => {
+		const obj1 = { a: { b: 1 } }
+		const obj2 = { a: { c: 2 } }
+		const result = deepAssign(obj1, obj2)
+		assert.deepEqual(result, { a: { b: 1, c: 2 } })
+	})
 
-    it("Replaces non-object properties in target with nested hierarchy", () => {
-        const obj1 = { a: 1, b: 2 }
-        const obj2 = { b: { c: 3 } }
-        const result = deepAssign(obj1, obj2)
-        assert.deepEqual(result, { a: 1, b: { c: 3 } })
-    })
+	it("Replaces non-object properties in target with nested hierarchy", () => {
+		const obj1 = { a: 1, b: 2 }
+		const obj2 = { b: { c: 3 } }
+		const result = deepAssign(obj1, obj2)
+		assert.deepEqual(result, { a: 1, b: { c: 3 } })
+	})
 
-    it("Does not merge properties of arrays or functions", () => {
-        const obj1 = { a: { value: 123 }, b: { value: 456 }, c: { value: 789 } }
-        const obj2 = { a: [1, 2], b: function someFunc() {}, c() {} }
-        const result = deepAssign(obj1, obj2)
+	it("Does not merge properties of arrays or functions", () => {
+		const obj1 = { a: { value: 123 }, b: { value: 456 }, c: { value: 789 } }
+		const obj2 = { a: [1, 2], b: function someFunc() {}, c() {} }
+		const result = deepAssign(obj1, obj2)
 
-        assert(Array.isArray(result.a), "Array property should not be merged")
-        assert(typeof result.b === "function", "Function property should not be merged")
-        assert(typeof result.c === "function", "Function property should not be merged")
-    })
+		assert(Array.isArray(result.a), "Array property should not be merged")
+		assert(
+			typeof result.b === "function",
+			"Function property should not be merged",
+		)
+		assert(
+			typeof result.c === "function",
+			"Function property should not be merged",
+		)
+	})
 })
 
 describe("Plain object check", () => {
-    it("Returns true for plain objects", () => {
-        assert(isPlainObject({}))
-        assert(isPlainObject(Object.create(null)))
-    })
+	it("Returns true for plain objects", () => {
+		assert(isPlainObject({}))
+		assert(isPlainObject(Object.create(null)))
+	})
 
-    it("Returns false for array type values", () => {
-        assert.strictEqual(isPlainObject([]), false)
-        assert.strictEqual(isPlainObject(new Array()), false)
-        assert.strictEqual(isPlainObject(new Set([1, 2, 3])), false)
-    })
+	it("Returns false for array type values", () => {
+		assert.strictEqual(isPlainObject([]), false)
+		assert.strictEqual(isPlainObject(new Array()), false)
+		assert.strictEqual(isPlainObject(new Set([1, 2, 3])), false)
+	})
 
-    it("Returns false for object-like class instances", () => {
-        assert.strictEqual(isPlainObject(new Map()), false)
-        assert.strictEqual(isPlainObject(new WeakMap()), false)
-    })
+	it("Returns false for object-like class instances", () => {
+		assert.strictEqual(isPlainObject(new Map()), false)
+		assert.strictEqual(isPlainObject(new WeakMap()), false)
+	})
 
-    it("Returns false for constructed objects", () => {
-        assert.strictEqual(isPlainObject(new Date()), false)
-        assert.strictEqual(isPlainObject(new RegExp()), false)
-        assert.strictEqual(isPlainObject(new WeakSet()), false)
-        assert.strictEqual(isPlainObject(new (class Baz {})), false)
-    })
+	it("Returns false for constructed objects", () => {
+		assert.strictEqual(isPlainObject(new Date()), false)
+		assert.strictEqual(isPlainObject(new RegExp()), false)
+		assert.strictEqual(isPlainObject(new WeakSet()), false)
+		assert.strictEqual(isPlainObject(new (class Baz {})()), false)
+	})
 
-    it("Returns false for non-object values", () => {
-        assert.strictEqual(isPlainObject(null), false)
-        assert.strictEqual(isPlainObject(undefined), false)
-        assert.strictEqual(isPlainObject(123), false)
-        assert.strictEqual(isPlainObject("abc"), false)
-        assert.strictEqual(isPlainObject(function foo() {}), false)
-        assert.strictEqual(isPlainObject(class Bar {}), false)
-    })
+	it("Returns false for non-object values", () => {
+		assert.strictEqual(isPlainObject(null), false)
+		assert.strictEqual(isPlainObject(undefined), false)
+		assert.strictEqual(isPlainObject(123), false)
+		assert.strictEqual(isPlainObject("abc"), false)
+		assert.strictEqual(
+			isPlainObject(function foo() {}),
+			false,
+		)
+		assert.strictEqual(isPlainObject(class Bar {}), false)
+	})
 })
 
 describe("Callable accessor", () => {
-    it("Returns default value when path part is not found", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        const accessor = createCallableAccessor(obj)
-        assert.equal(accessor("a.b.d", "default"), "default")
-    })
+	it("Returns default value when path part is not found", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		const accessor = createCallableAccessor(obj)
+		assert.equal(accessor("a.b.d", "default"), "default")
+	})
 
-    it("Returns the value for a valid path", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        const accessor = createCallableAccessor(obj)
-        assert.strictEqual(accessor("a.b.c"), "value")
-    })
+	it("Returns the value for a valid path", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		const accessor = createCallableAccessor(obj)
+		assert.strictEqual(accessor("a.b.c"), "value")
+	})
 
-    it("Returns null for null values", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: null,
-                },
-            },
-        }
-        const accessor = createCallableAccessor(obj, {shouldReplaceNull: false})
-        assert.strictEqual(accessor("a.b.c", 123), null)
-    })
+	it("Returns null for null values", () => {
+		const obj = {
+			a: {
+				b: {
+					c: null,
+				},
+			},
+		}
+		const accessor = createCallableAccessor(obj, { shouldReplaceNull: false })
+		assert.strictEqual(accessor("a.b.c", 123), null)
+	})
 
-    it("Replaces null values with default value when option is set", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: null,
-                },
-            },
-        }
-        const accessor = createCallableAccessor(obj, {shouldReplaceNull: true})
-        assert.strictEqual(accessor("a.b.c", 123), 123)
-    })
+	it("Replaces null values with default value when option is set", () => {
+		const obj = {
+			a: {
+				b: {
+					c: null,
+				},
+			},
+		}
+		const accessor = createCallableAccessor(obj, { shouldReplaceNull: true })
+		assert.strictEqual(accessor("a.b.c", 123), 123)
+	})
 
-    it("Supports property access with dot notation string", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        const accessor = createCallableAccessor(obj, { shouldReplaceNull: true })
-        assert.strictEqual(accessor["a.b.c"], "value")
-    })
+	it("Supports property access with dot notation string", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		const accessor = createCallableAccessor(obj, { shouldReplaceNull: true })
+		assert.strictEqual(accessor["a.b.c"], "value")
+	})
 
-    it("Supports regular property access to the underlying object", () => {
-        const obj = {
-            a: {
-                b: {
-                    c: "value",
-                },
-            },
-        }
-        const accessor = createCallableAccessor(obj, { shouldReplaceNull: true })
-        assert.strictEqual(accessor.a.b.c, "value")
-    })
+	it("Supports regular property access to the underlying object", () => {
+		const obj = {
+			a: {
+				b: {
+					c: "value",
+				},
+			},
+		}
+		const accessor = createCallableAccessor(obj, { shouldReplaceNull: true })
+		assert.strictEqual(accessor.a.b.c, "value")
+	})
 })

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Class} from "../types";
+import { Class } from "../types"
 
 export function getNestedKey<OutT = any>(object: object, path: string): OutT
 export function setNestedKey(object: object, path: string, value: any)
@@ -38,17 +38,29 @@ export function deepAssign<Target = object>(
 export function setClassName(clazz: Class<any>, name: string)
 
 export type CallableAccessorOptions<NullValue extends boolean = boolean> = {
-    shouldReplaceNull?: NullValue;
+	shouldReplaceNull?: NullValue
 }
 
 declare function Accessor(path: string): any | undefined | null
 declare function Accessor<Default>(path: string, fallback: Default): any | null
-declare function AccessorWithoutNull<Default>(path: string): Default | null | undefined
-declare function AccessorWithoutNull<Default>(path: string, fallback: Default): Default
+declare function AccessorWithoutNull<Default>(
+	path: string,
+): Default | null | undefined
+declare function AccessorWithoutNull<Default>(
+	path: string,
+	fallback: Default,
+): Default
 
 export type CallableAccessor = typeof Accessor & Record<string, any>
-export type CallableAccessorWithoutNull = typeof AccessorWithoutNull & Record<string, any>
+export type CallableAccessorWithoutNull = typeof AccessorWithoutNull &
+	Record<string, any>
 
 export function createCallableAccessor(object: object): typeof Accessor
-export function createCallableAccessor(object: Object, options: CallableAccessorOptions<false>): CallableAccessor
-export function createCallableAccessor(object: Object, options: CallableAccessorOptions<true>): CallableAccessorWithoutNull
+export function createCallableAccessor(
+	object: Object,
+	options: CallableAccessorOptions<false>,
+): CallableAccessor
+export function createCallableAccessor(
+	object: Object,
+	options: CallableAccessorOptions<true>,
+): CallableAccessorWithoutNull

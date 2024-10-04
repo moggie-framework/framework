@@ -16,9 +16,15 @@
 
 import { EventEmitter } from "node:events"
 import pathUtil from "node:path"
-import {createCallableAccessor, deepAssign, isPlainObject} from "@voyage/helpers"
+import {
+	bind,
+	createCallableAccessor,
+	deepAssign,
+	isPlainObject,
+} from "@voyage/helpers"
 import { Container } from "../container/resolver.js"
 import { tryLoadConfigFiles } from "./configuration.js"
+import {Plugin} from "./plugin.js";
 /** import { ApplicationEventMap } from "./application.js"; */
 
 export class Application extends EventEmitter {
@@ -26,24 +32,24 @@ export class Application extends EventEmitter {
 		return pathUtil.resolve(this.opts.configRoot || "config")
 	}
 
-    get config() {
-        return createCallableAccessor(this.$config, { shouldReplaceNull: true})
-    }
+	get config() {
+		return createCallableAccessor(this.$config, { shouldReplaceNull: true })
+	}
 
 	constructor(opts = {}) {
 		super()
 		this.opts = opts
-        this.$config = {}
+		this.$config = {}
 		this.$container = new Container()
 		this.$plugins = []
 
-        this.setDefaults()
+		this.setDefaults()
 	}
 
-    setDefaults() {
-        this.$container.when("app").value(this)
-        this.$container.when("config").result(() => this.config)
-    }
+	setDefaults() {
+		this.$container.when("app").value(this)
+		this.$container.when("config").result(() => this.config)
+	}
 
 	loadEnvironment() {
 		if (this.opts.disable?.env) {
@@ -86,31 +92,66 @@ export class Application extends EventEmitter {
 			paths.push(...pluginPaths)
 		}
 
-        if (!this.opts.disable?.fs) {
-            const loadedConfig = await tryLoadConfigFiles(this.$configRoot, paths)
-            deepAssign(config, loadedConfig)
-        }
+		if (!this.opts.disable?.fs) {
+			const loadedConfig = await tryLoadConfigFiles(this.$configRoot, paths)
+			deepAssign(config, loadedConfig)
+		}
 
 		if (isPlainObject(this.opts.config)) {
 			deepAssign(config, this.opts.config)
 		}
-        this.$config = config
+		this.$config = config
 	}
 
 	register(...plugins) {
 		for (const plugin of plugins) {
+			if (!(plugin.prototype instanceof Plugin)) {
+				throw new TypeError("Can only register an instance of Plugin")
+			}
 			this.$plugins.push(new plugin())
 		}
 	}
 
 	async boot() {
 		this.loadEnvironment()
-        await this.loadConfig()
+		await this.loadConfig()
 
 		this.emit("app:booting")
 		for (const plugin of this.$plugins) {
 			await plugin.boot(this.$container)
 		}
 		this.emit("app:booted")
+	}
+
+	@bind
+	async launching() {
+		this.emit("app:launching")
+		for (const plugin of this.plugins) {
+			await plugin.preLaunch(this.$container)
+		}
+	}
+
+	@bind
+	async launched() {
+		this.emit("app:launched")
+		for (const plugin of this.plugins) {
+			await plugin.postLaunch(this.$container)
+		}
+	}
+
+	@bind
+	async processing() {
+		this.emit("app:processing")
+		for (const plugin of this.plugins) {
+			await plugin.preAction(this.$container)
+		}
+	}
+
+	@bind
+	async processed() {
+		this.emit("app:processed")
+		for (const plugin of this.plugins) {
+			await plugin.postAction(this.$container)
+		}
 	}
 }
