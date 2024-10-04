@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-export {
-	Container,
-	containerContext,
-	container,
-} from "../lib/container/resolver.js"
-export { ConstructionMethod } from "../lib/container/dependency.js"
-export { Application } from '../lib/application/application.js'
-export { Plugin, registerConfig, preLaunch, preAction, postLaunch, postAction, onBoot }
-	from '../lib/application/plugin.js'
+/**
+ * The type of config file being loaded. "blank" represents any file that does not match a known extension, and will
+ * be treated as "importable" with the assumption that an appropriate file loader has been registered.
+ */
+export type FileType = 'js' | 'ts' | 'json' | 'blank'
+
+/**
+ * Inferred information about a file being loaded.
+ */
+export type FileInfo = {
+    filetype: FileType,
+    filename: string,
+}
+
+export function tryLoadConfigFiles(root: string, files: string[]): Promise<Record<string, any>>

@@ -9,9 +9,7 @@
     "test:e2e": "node test {path}"
   },
   "workspaces": [
-    "packages/framework-core",
-    "packages/runtime",
-    "packages/framework-helpers"
+    "packages/*"
   ],
   "devDependencies": {
     "prettier": "^3.3.3"
