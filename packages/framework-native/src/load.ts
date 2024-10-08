@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-import { proxy } from '@neon-rs/load'
-import { createRequire } from 'node:module'
+import { proxy } from "@neon-rs/load"
+import { createRequire } from "node:module"
 
 const require = createRequire(import.meta.url)
 
 export const Native = proxy({
 	platforms: {
-		'win32-x64-msvc': () => require('@voyage/native-win32-x64-msvc'),
-		'darwin-x64': () => require('@voyage/native-darwin-x64'),
-		'darwin-arm64': () => require('@voyage/native-darwin-arm64'),
-		'linux-x64-gnu': () => require('@voyage/native-linux-x64-gnu'),
-		'linux-arm64-gnu': () => require('@voyage/native-linux-arm64-gnu')
+		"win32-x64-msvc": () => require("@voyage/native-win32-x64-msvc"),
+		"darwin-x64": () => require("@voyage/native-darwin-x64"),
+		"darwin-arm64": () => require("@voyage/native-darwin-arm64"),
+		"linux-x64-gnu": () => require("@voyage/native-linux-x64-gnu"),
+		"linux-arm64-gnu": () => require("@voyage/native-linux-arm64-gnu"),
 	},
-	debug: () => require('../index.node')
+	debug: () => require("../index.node"),
 })

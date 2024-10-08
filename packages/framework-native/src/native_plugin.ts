@@ -20,7 +20,7 @@ import { NativeHttpClient } from "./http_client.js"
 
 export class NativePlugin extends Plugin {
 	async preLaunch(container: Container): Promise<void> {
-		await container.ifExists(HttpClientManager, async (manager) => {
+		await container.ifExists(HttpClientManager, async manager => {
 			manager.manageClass("native", NativeHttpClient)
 		})
 	}

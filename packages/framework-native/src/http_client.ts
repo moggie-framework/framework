@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
-import { Native } from './load.js';
-import type { InnerHttpClientToken } from './load.js';
+import { Native } from "./load.js"
+import type { InnerHttpClientToken } from "./load.js"
 import { HttpClient, HttpRequestOpts } from "@voyage/core/http"
 import type { SupportedMethod } from "@voyage/core/http"
 
 const { HttpClientRequest, HttpClientCreate } = Native
 
 declare module "./load.js" {
-	export const InnerHttpClient: unique symbol;
-	export type InnerHttpClientToken = typeof InnerHttpClient;
+	export const InnerHttpClient: unique symbol
+	export type InnerHttpClientToken = typeof InnerHttpClient
 
-	function HttpClientCreate(): InnerHttpClientToken;
-	function HttpClientRequest(client: InnerHttpClientToken, method: SupportedMethod, url: string, headers: object, body: any, cb: Function): void;
+	function HttpClientCreate(): InnerHttpClientToken
+	function HttpClientRequest(
+		client: InnerHttpClientToken,
+		method: SupportedMethod,
+		url: string,
+		headers: object,
+		body: any,
+		cb: Function,
+	): void
 
 	type NativeExport = {
-		HttpClientCreate: typeof HttpClientCreate;
-		HttpClientRequest: typeof HttpClientRequest;
+		HttpClientCreate: typeof HttpClientCreate
+		HttpClientRequest: typeof HttpClientRequest
 	}
 }
 
@@ -45,21 +52,25 @@ export class NativeHttpClient extends HttpClient {
 	 *
 	 * @private
 	 */
-	private [INNER_CLIENT]: InnerHttpClientToken;
+	private [INNER_CLIENT]: InnerHttpClientToken
 
 	constructor() {
 		super()
-		this[INNER_CLIENT] = HttpClientCreate();
+		this[INNER_CLIENT] = HttpClientCreate()
 	}
 
-	async request(method: SupportedMethod, url: string, opts: HttpRequestOpts): Promise<Response> {
+	async request(
+		method: SupportedMethod,
+		url: string,
+		opts: HttpRequestOpts,
+	): Promise<Response> {
 		const headers = new Headers(opts.headers ?? {})
-		let body = opts.body ?? null;
+		let body = opts.body ?? null
 
 		if (opts.body instanceof ArrayBuffer) {
 			body = new Uint8Array(opts.body)
-		} else if (typeof opts.body === 'string') {
-			body = (new TextEncoder()).encode(opts.body)
+		} else if (typeof opts.body === "string") {
+			body = new TextEncoder().encode(opts.body)
 		} else {
 			body = JSON.stringify(opts.body)
 			headers.set("content-type", "application/json")
@@ -67,24 +78,33 @@ export class NativeHttpClient extends HttpClient {
 
 		return await new Promise((resolve, reject) => {
 			try {
-				HttpClientRequest(this[INNER_CLIENT], method, url, headers, body, (err: Error | string | null, result: any) => {
-					if (err) {
-						if (typeof err === 'string') {
-							reject(new Error(err));
+				HttpClientRequest(
+					this[INNER_CLIENT],
+					method,
+					url,
+					headers,
+					body,
+					(err: Error | string | null, result: any) => {
+						if (err) {
+							if (typeof err === "string") {
+								reject(new Error(err))
+							} else {
+								reject(err)
+							}
 						} else {
-							reject(err);
+							resolve(
+								new Response(result.body, {
+									// @ts-ignore
+									url,
+									status: result.status,
+									headers: result.headers,
+								}),
+							)
 						}
-					} else {
-						resolve(new Response(result.body, {
-							// @ts-ignore
-							url,
-							status: result.status,
-							headers: result.headers,
-						}));
-					}
-				});
-			} catch(e) {
-				reject(e);
+					},
+				)
+			} catch (e) {
+				reject(e)
 			}
 		})
 	}

@@ -22,7 +22,10 @@ export type BuilderFn<Config extends object, Output> = (
 	config: Config,
 ) => Output
 
-export abstract class Manager<ManagedInterface = any, ConfigType = any> extends Facade {
+export abstract class Manager<
+	ManagedInterface = any,
+	ConfigType = any,
+> extends Facade {
 	variants: Map<string, BuilderFn<any, ManagedInterface>>
 	instances: Map<string, ManagedInterface>
 

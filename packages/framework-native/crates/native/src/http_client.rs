@@ -14,6 +14,7 @@ use neon::prelude::{
 	JsValue, Object,
 };
 use neon::types::JsBox;
+use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::ops::{Deref, DerefMut};
 use std::str::FromStr;
@@ -60,32 +61,46 @@ impl HyperClientRuntime {
 		let port = url.port_u16().unwrap_or(80);
 		let full_address = format!("{}:{}", host, port);
 
-		if self.connections.contains_key(&full_address) {
-			return Ok(&mut self.connections.get_mut(&full_address).unwrap().0);
-		}
-
-		let stream = TcpStream::connect(&full_address)
-			.await
-			.map_err(|e| e.to_string())?;
-		let io_connector = TokioIo::new(stream);
-
-		let (sender, conn) = hyper::client::conn::http1::handshake(io_connector)
-			.await
-			.map_err(|e| e.to_string())?;
-
-		let h = tokio::task::spawn(async move {
-			if let Err(_err) = conn.await {
-				// TODO: Extract error out to be returned to the main JS thread
-				// eprintln!("{}", err);
-				// io::stdout().write_all(format!("{}", err).as_bytes());
+		// Check to see if we both have an existing connection w/ handshake, or
+		// if we need to create a new connection (either closed pipe or no pipe)
+		let entry = self.connections.entry(full_address.clone());
+		let invalid = match entry {
+			Entry::Occupied(mut entry) => {
+				if entry.get().0.is_closed() {
+					entry.get_mut().1.abort();
+					entry.remove();
+					true
+				} else {
+					false
+				}
 			}
-		});
+			Entry::Vacant(_) => true,
+		};
 
-		Ok(&mut self
-			.connections
-			.entry(full_address.clone())
-			.or_insert((sender, h))
-			.0)
+		// No valid connection found, so create a new one
+		if invalid {
+			let stream = TcpStream::connect(&full_address)
+				.await
+				.map_err(|e| e.to_string())?;
+			let io_connector = TokioIo::new(stream);
+
+			let (sender, conn) = hyper::client::conn::http1::handshake(io_connector)
+				.await
+				.map_err(|e| e.to_string())?;
+
+			let conn_handle = tokio::task::spawn(async move { if let Err(_err) = conn.await {} });
+
+			self.connections
+				.insert(full_address.clone(), (sender, conn_handle));
+			self.connections
+				.get_mut(&full_address)
+				.ok_or_else(|| String::from("Invalid connection found"))
+				.map(|(sender, _)| sender)
+		} else if let Some((sender, _)) = self.connections.get_mut(&full_address) {
+			Ok(sender)
+		} else {
+			Err(String::from("Invalid connection found"))
+		}
 	}
 }
 

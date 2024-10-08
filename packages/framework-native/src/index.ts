@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { NativeHttpClient } from './http_client.js';
-export { NativePlugin } from './native_plugin.js';
+export { NativeHttpClient } from "./http_client.js"
+export { NativePlugin } from "./native_plugin.js"
