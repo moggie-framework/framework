@@ -31,6 +31,14 @@ import { Facade } from "../container/facade.js"
  * @property {Map<string, any>} instances
  */
 export class Manager extends Facade {
+	static async make(name = null) {
+		const inst = await this.facade()
+		if (inst) {
+			return await inst.make(name)
+		}
+		return null
+	}
+
 	constructor() {
 		super()
 		this.variants = new Map()
@@ -66,9 +74,13 @@ export class Manager extends Facade {
 		if (!this.instances.has(name)) {
 			const builder = this.variants.get(name)
 			const instance = await builder(config)
-			this.instances.set(name, instance)
+			this.store(name, instance)
 		}
 
 		return this.instances.get(name)
+	}
+
+	store(name, instance) {
+		this.instances.set(name, instance)
 	}
 }

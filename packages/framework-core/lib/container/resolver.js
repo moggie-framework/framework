@@ -106,6 +106,14 @@ export class Container extends EventEmitter {
 		return this[Mapping].has(resolvedName)
 	}
 
+	async ifExists(name, cb) {
+		if (this.has(name)) {
+			const dep = await this.resolve(name)
+			return cb(dep)
+		}
+		return null
+	}
+
 	/**
 	 * Check if this container is able to resolve an item for the given name.
 	 * Differs from `has` in that it will also check the hierarchy this container is a part of, if appropriate

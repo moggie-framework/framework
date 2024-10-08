@@ -47,15 +47,12 @@ describe("Facade Static Accessor", () => {
 
 	it("Only resolves to concretions with a matching container name, if multiple types are registered with different names", async () => {
 		@alias("Root")
-		class RootInterface extends Facade {
-		}
+		class RootInterface extends Facade {}
 
-		class FirstConcrete extends RootInterface {
-		}
+		class FirstConcrete extends RootInterface {}
 
 		@alias("Child")
-		class SecondConcrete extends RootInterface {
-		}
+		class SecondConcrete extends RootInterface {}
 
 		const container = new Container()
 		container.when(FirstConcrete).instance(FirstConcrete)
@@ -78,14 +75,11 @@ describe("Facade Static Accessor", () => {
 
 	it("Correctly uses class name of inherited facade calls", async () => {
 		@alias("Root")
-		class RootInterface extends Facade {
-		}
+		class RootInterface extends Facade {}
 
-		class FirstConcrete extends RootInterface {
-		}
+		class FirstConcrete extends RootInterface {}
 
-		class SecondConcrete extends FirstConcrete {
-		}
+		class SecondConcrete extends FirstConcrete {}
 
 		const container = new Container()
 		container.when(FirstConcrete).instance(FirstConcrete)

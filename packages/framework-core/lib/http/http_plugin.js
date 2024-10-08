@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-import { Class } from "@voyage/helpers/types"
-import { Facade } from "../container/facade"
+import { Plugin } from "../application/plugin.js"
+import { HttpClientManager } from "./client/manager.js"
+import process from "node:process"
 
-export type ManagedConfig<ConfigType> = ConfigType & { driver: string | null }
-export type BuilderFn<Config extends object, Output> = (
-	config: Config,
-) => Output
+export class HttpPlugin extends Plugin {
+	configPaths() {
+		return ["http"]
+	}
 
-export abstract class Manager<ConfigType> extends Facade {
-	variants: Map<string, BuilderFn<any, any>>
-	instances: Map<string, any>
+	defaultConfigs() {
+		return {
+			http: {
+				client: {
+					driver: process.env.HTTP_CLIENT_DRIVER || "fetch",
+				},
+			},
+		}
+	}
 
-	manage(name: string, builder: BuilderFn<any, any>)
-
-	manageClass(name: string, clazz: Class<any>)
-
-	config(): ManagedConfig<ConfigType>
-
-	make(name: string | null | undefined): any | Promise<any>
+	async boot(container) {
+		container.when(HttpClientManager).singleton(HttpClientManager)
+	}
 }

@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-import { Class } from "@voyage/helpers/types"
-import { Facade } from "../container/facade"
+import { Manager } from "../../manager/manager"
 
-export type ManagedConfig<ConfigType> = ConfigType & { driver: string | null }
-export type BuilderFn<Config extends object, Output> = (
-	config: Config,
-) => Output
-
-export abstract class Manager<ConfigType> extends Facade {
-	variants: Map<string, BuilderFn<any, any>>
-	instances: Map<string, any>
-
-	manage(name: string, builder: BuilderFn<any, any>)
-
-	manageClass(name: string, clazz: Class<any>)
-
-	config(): ManagedConfig<ConfigType>
-
-	make(name: string | null | undefined): any | Promise<any>
-}
+export class HttpClientManager extends Manager<any> {}
