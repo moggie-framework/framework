@@ -14,7 +14,5 @@
  * limitations under the License.
  */
 
-import { Manager } from "../../manager/manager"
-import { HttpClient } from "./http_client"
-
-export class HttpClientManager extends Manager<HttpClient> {}
+export { NativeHttpClient } from './http_client.js';
+export { NativePlugin } from './native_plugin.js';

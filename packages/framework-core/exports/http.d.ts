@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import { Manager } from "../../manager/manager"
-import { HttpClient } from "./http_client"
+export type { SupportedMethod, HttpRequestOpts } from '../lib/http/client/http_client.js'
 
-export class HttpClientManager extends Manager<HttpClient> {}
+export { HttpPlugin } from "../lib/http/http_plugin.js"
+export { HttpClient } from "../lib/http/client/http_client.js"
+export { HttpClientManager } from "../lib/http/client/manager.js"
+export { FetchHttpClient } from "../lib/http/client/fetch_client.js"

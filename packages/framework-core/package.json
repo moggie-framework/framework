@@ -24,6 +24,10 @@
     "./framework": {
       "default": "./exports/framework.js",
       "types": "./exports/framework.d.ts"
+    },
+    "./http": {
+      "default": "./exports/http.js",
+      "types": "./exports/http.d.ts"
     }
   }
 }

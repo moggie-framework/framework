@@ -20,3 +20,15 @@ export {
 	container,
 } from "../lib/container/resolver.js"
 export { ConstructionMethod } from "../lib/container/dependency.js"
+export { Facade } from "../lib/container/facade.js"
+export { Application } from "../lib/application/application.js"
+export {
+	Plugin,
+	registerConfig,
+	preLaunch,
+	preAction,
+	postLaunch,
+	postAction,
+	onBoot,
+} from "../lib/application/plugin.js"
+export { Manager } from "../lib/manager/manager.js"

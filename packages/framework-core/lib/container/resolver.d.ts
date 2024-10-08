@@ -28,6 +28,7 @@ export class Container {
 	register(name: ContainerName, item: ConstructionMethod): void
 	when(name: ContainerName): DependencyBuilder
 	has(name: ContainerName): boolean
+	ifExists(name: ContainerName, cb: (value: any) => Promise<void> | void): Promise<void>
 	canResolve(name: ContainerName): boolean
 	resolve<Output>(item: ContainerName): Output | null
 	resolveAll(...items: ContainerName[]): (any | null)[]

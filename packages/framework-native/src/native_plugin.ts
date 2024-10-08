@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-import { Manager } from "../../manager/manager"
-import { HttpClient } from "./http_client"
+import { Container, Plugin } from "@voyage/core/framework"
+import { HttpClientManager } from "@voyage/core/http"
+import { NativeHttpClient } from "./http_client.js"
 
-export class HttpClientManager extends Manager<HttpClient> {}
+export class NativePlugin extends Plugin {
+	async preLaunch(container: Container): Promise<void> {
+		await container.ifExists(HttpClientManager, async (manager) => {
+			manager.manageClass("native", NativeHttpClient)
+		})
+	}
+}
