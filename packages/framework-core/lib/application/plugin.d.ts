@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-import {Container} from "../container/resolver";
+import { Container } from "../container/resolver"
 
 export abstract class Plugin {
-    configPaths(): string[]
-    configDefaults(): Record<string, any>
+	configPaths(): string[]
 
-    boot(container: Container): Promise<void>
-    preLaunch(container: Container): Promise<void>
-    postLaunch(container: Container): Promise<void>
-    preAction(container: Container): Promise<void>
-    postAction(container: Container): Promise<void>
+	configDefaults(): Record<string, any>
+
+	boot(container: Container): Promise<void>
+
+	preLaunch(container: Container): Promise<void>
+
+	postLaunch(container: Container): Promise<void>
+
+	preAction(container: Container): Promise<void>
+
+	postAction(container: Container): Promise<void>
 }
 
 type SingleMethodPluginCallback = (container: Container) => Promise<void> | void
-type SingleMethodPluginFactory = (callback: SingleMethodPluginCallback) => Plugin
+type SingleMethodPluginFactory = (
+	callback: SingleMethodPluginCallback,
+) => Plugin
 
 export declare const onBoot: SingleMethodPluginFactory
 export declare const preLaunch: SingleMethodPluginFactory
@@ -36,4 +43,7 @@ export declare const postLaunch: SingleMethodPluginFactory
 export declare const preAction: SingleMethodPluginFactory
 export declare const postAction: SingleMethodPluginFactory
 
-export declare function registerConfig(name: string, value: Record<any, any>): Plugin
+export declare function registerConfig(
+	name: string,
+	value: Record<any, any>,
+): Plugin

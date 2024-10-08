@@ -16,15 +16,11 @@
 
 import { EventEmitter } from "node:events"
 import pathUtil from "node:path"
-import {
-	bind,
-	createCallableAccessor,
-	deepAssign,
-	isPlainObject,
-} from "@voyage/helpers"
+import { bind, createCallableAccessor, deepAssign, isPlainObject } from "@voyage/helpers"
 import { Container } from "../container/resolver.js"
 import { tryLoadConfigFiles } from "./configuration.js"
-import {Plugin} from "./plugin.js";
+import { Plugin } from "./plugin.js"
+
 /** import { ApplicationEventMap } from "./application.js"; */
 
 export class Application extends EventEmitter {

@@ -15,7 +15,7 @@
  */
 
 import type { EventEmitter } from "node:events"
-import {bind, CallableAccessorWithoutNull} from "@voyage/helpers"
+import { CallableAccessorWithoutNull } from "@voyage/helpers"
 import type { Plugin } from "./plugin"
 
 export type ApplicationOptions = {
@@ -59,27 +59,28 @@ export class Application extends EventEmitter<ApplicationEventMap> {
 	constructor(opts?: ApplicationOptions)
 	register(...plugins: Plugin[]): void
 
-    /**
-     * Load environment files, config files, and run the boot step for any registered plugins
-     */
+	/**
+	 * Load environment files, config files, and run the boot step for any registered plugins
+	 */
 	boot(): Promise<void>
-    /**
-     * Emit the app:launching event and run the pre-launch step for any registered plugins
-     */
-    launching(): Promise<void>
 
-    /**
-     * Emit the app:launched event and run the post-launch step for any registered plugins
-     */
-    launched(): Promise<void>
+	/**
+	 * Emit the app:launching event and run the pre-launch step for any registered plugins
+	 */
+	launching(): Promise<void>
 
-    /**
-     * Emit the app:processing event and run the pre-action step for any registered plugins
-     */
-    processing(): Promise<void>
+	/**
+	 * Emit the app:launched event and run the post-launch step for any registered plugins
+	 */
+	launched(): Promise<void>
 
-    /**
-     * Emit the app:processed event and run the post-action step for any registered plugins
-     */
-    processed(): Promise<void>
+	/**
+	 * Emit the app:processing event and run the pre-action step for any registered plugins
+	 */
+	processing(): Promise<void>
+
+	/**
+	 * Emit the app:processed event and run the post-action step for any registered plugins
+	 */
+	processed(): Promise<void>
 }
