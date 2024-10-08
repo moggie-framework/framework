@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-use std::error::Error;
-use std::str::FromStr;
-use hyper::HeaderMap;
 use hyper::http::{HeaderName, HeaderValue};
+use hyper::HeaderMap;
 use neon::prelude::*;
 use neon::result::Throw;
 use neon::thread::LocalKey;
+use std::error::Error;
+use std::str::FromStr;
 use tokio::runtime::Runtime;
 
 static ASYNC_RUNTIME: LocalKey<Runtime> = LocalKey::new();
@@ -41,31 +41,38 @@ pub fn iter_object_entries<'a: 'b, 'b>(
 			let value = obj.get_value(cx, key_str).ok()?;
 
 			Some((native_str, value))
-		}).collect())
+		})
+		.collect())
 }
 
-pub fn object_to_headers<'a>(cx: &mut impl Context<'a>, obj: &Handle<'a, JsObject>) -> Result<HeaderMap, Throw> {
+pub fn object_to_headers<'a>(
+	cx: &mut impl Context<'a>,
+	obj: &Handle<'a, JsObject>,
+) -> Result<HeaderMap, Throw> {
 	let header_collection = iter_object_entries(cx, obj)?;
-	let header_list = header_collection.into_iter()
-        .filter_map(|(key, value)| {
-            let value_str = value.to_string(cx).ok()?.value(cx);
-            Some((key, value_str))
-        })
-		.filter_map(|(k, v)| match (HeaderName::from_str(&k), HeaderValue::from_str(&v)) {
-			(Ok(k), Ok(v)) => Some((k, v)),
-            _ => None,
-		});
+	let header_list = header_collection
+		.into_iter()
+		.filter_map(|(key, value)| {
+			let value_str = value.to_string(cx).ok()?.value(cx);
+			Some((key, value_str))
+		})
+		.filter_map(
+			|(k, v)| match (HeaderName::from_str(&k), HeaderValue::from_str(&v)) {
+				(Ok(k), Ok(v)) => Some((k, v)),
+				_ => None,
+			},
+		);
 
 	Ok(HeaderMap::from_iter(header_list))
 }
 
 pub fn throw_generic_error<'a>(cx: &mut impl Context<'a>, err: impl Error) -> Throw {
-    cx.throw_error(format!("{}", err)).unwrap_or_else(|e| e)
+	cx.throw_error(format!("{}", err)).unwrap_or_else(|e| e)
 }
 
 #[macro_export]
 macro_rules! throw_channel_error {
-    ($chann: expr, $cb: expr, $expr: expr) => {
+	($chann: expr, $cb: expr, $expr: expr) => {
 		match $expr {
 			Ok(value) => value,
 			Err(e) => {
@@ -80,7 +87,7 @@ macro_rules! throw_channel_error {
 			}
 		}
 	};
-    ($chann: expr, $cb: expr, $expr: expr, $err_msg: expr) => {
+	($chann: expr, $cb: expr, $expr: expr, $err_msg: expr) => {
 		match $expr {
 			Some(value) => value,
 			None => {

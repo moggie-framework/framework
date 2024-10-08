@@ -35,14 +35,6 @@ impl DerefMut for Headers {
 }
 
 impl Headers {
-	pub fn new() -> Self {
-		Headers(HashMap::new())
-	}
-
-	pub fn set_header(&mut self, key: &str, value: &str) {
-		self.0.insert(key.to_lowercase(), value.to_lowercase());
-	}
-
 	pub fn as_object<'a>(&self, cx: &mut impl Context<'a>) -> JsResult<'a, JsObject> {
 		let object = cx.empty_object();
 		for (key, value) in &self.0 {
