@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "format": "npx prettier --write '{packages,scripts,examples}/**/*.{js,ts}'",
+    "format": "npx prettier --write '{packages,scripts,examples}/**/*.{js,ts}' && cd packages/framework-native && cargo fmt",
     "test": "npm --workspaces test --experimental-test-coverage",
     "test:direct": "node --test --experimental-test-coverage --enable-source-maps --import @voyage/runtime",
-    "test:e2e": "node test {path}"
+    "test:e2e": "node test {path}",
+    "rust:check": "cd packages/framework-native && cargo check"
   },
   "workspaces": [
     "packages/*"
