@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-export {
-	Container,
-	containerContext,
-	container,
-} from "../lib/container/resolver.js"
-export { ConstructionMethod } from "../lib/container/dependency.js"
-export { Application } from "../lib/application/application.js"
-export {
-	Plugin,
-	registerConfig,
-	preLaunch,
-	preAction,
-	postLaunch,
-	postAction,
-	onBoot,
-} from "../lib/application/plugin.js"
+import { Class } from "@voyage/helpers/types"
+import { Facade } from "../container/facade"
+
+export type ManagedConfig<ConfigType> = ConfigType & { driver: string | null }
+export type BuilderFn<Config extends object, Output> = (config: Config) => Output
+
+export abstract class Manager<ConfigType> extends Facade {
+	variants: Map<string, BuilderFn<any, any>>
+	instances: Map<string, any>
+
+	manage(name: string, builder: BuilderFn<any, any>)
+
+	manageClass(name: string, clazz: Class<any>)
+
+	config(): ManagedConfig<ConfigType>
+
+	make(name: string | null | undefined): any | Promise<any>
+}

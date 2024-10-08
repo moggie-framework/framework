@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-export {
-	Container,
-	containerContext,
-	container,
-} from "../lib/container/resolver.js"
-export { ConstructionMethod } from "../lib/container/dependency.js"
-export { Application } from "../lib/application/application.js"
-export {
-	Plugin,
-	registerConfig,
-	preLaunch,
-	preAction,
-	postLaunch,
-	postAction,
-	onBoot,
-} from "../lib/application/plugin.js"
+import { resolveName } from "@voyage/helpers"
+import { container } from "./resolver.js"
+
+/**
+ * Root class for container services that allows for statically accessing the registered instance
+ * @class Facade
+ * @template OutputType The child type that extends this Facade, for correctly type hinting the interface being returned
+ */
+export class Facade {
+	/**
+	 * @returns {Promise<OutputType>}
+	 */
+	static async facade() {
+		const name = resolveName(this)
+		if (!name) {
+			return null
+		}
+		return container(name)
+	}
+}

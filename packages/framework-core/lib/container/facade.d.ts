@@ -14,19 +14,6 @@
  * limitations under the License.
  */
 
-export {
-	Container,
-	containerContext,
-	container,
-} from "../lib/container/resolver.js"
-export { ConstructionMethod } from "../lib/container/dependency.js"
-export { Application } from "../lib/application/application.js"
-export {
-	Plugin,
-	registerConfig,
-	preLaunch,
-	preAction,
-	postLaunch,
-	postAction,
-	onBoot,
-} from "../lib/application/plugin.js"
+export abstract class Facade {
+	static facade<T extends Facade>(): T | null
+}
