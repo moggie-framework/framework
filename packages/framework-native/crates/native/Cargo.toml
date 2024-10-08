@@ -1,0 +1,21 @@
+[package]
+name = "native"
+version = "0.1.0"
+description = "n-api implementations of Voyage types"
+authors = ["Louis Capitanchik <louis@microhacks.co.uk>"]
+license = "Apache-2.0"
+edition = "2021"
+exclude = ["index.node"]
+
+[lib]
+crate-type = ["cdylib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+http-body-util = "0.1.2"
+hyper = { version = "1.4.1", features = ["client", "http1"] }
+hyper-util = { version = "0.1.9", features = ["tokio", "client"] }
+neon = { version = "1.1.0-alpha.1", features = ["napi-8", "futures", "tokio"] }
+serde = "1.0.210"
+tokio = { version = "1.40", features = ["net", "rt-multi-thread"] }
