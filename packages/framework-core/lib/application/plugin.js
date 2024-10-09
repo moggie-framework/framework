@@ -36,7 +36,7 @@ export class Plugin {
 	 *
 	 * @returns {Record<string, object>}
 	 */
-	defaultConfigs() {
+	configDefaults() {
 		return {}
 	}
 
@@ -211,7 +211,7 @@ export function registerConfig(name, defaults) {
 			return [name]
 		}
 		@bind
-		defaultConfigs() {
+		configDefaults() {
 			return { [name]: defaults }
 		}
 	}

@@ -17,6 +17,8 @@
 import type { EventEmitter } from "node:events"
 import { CallableAccessorWithoutNull } from "@voyage/helpers"
 import type { Plugin } from "./plugin"
+import { Kernel } from "./kernel"
+import { Container } from "../container/resolver"
 
 export type ApplicationOptions = {
 	/**
@@ -46,7 +48,6 @@ export type ApplicationOptions = {
 
 export type ApplicationEventMap = {
 	"app:booting": []
-	"app:booted": []
 	"app:launching": []
 	"app:launched": []
 	"app:processing": []
@@ -55,8 +56,14 @@ export type ApplicationEventMap = {
 
 export class Application extends EventEmitter<ApplicationEventMap> {
 	config: CallableAccessorWithoutNull
+	KernelType: Kernel
 
-	constructor(opts?: ApplicationOptions)
+	$config: ApplicationOptions
+	$plugins: Plugin[]
+	$container: Container
+
+	constructor(kernel: Kernel, opts?: ApplicationOptions)
+
 	register(...plugins: Plugin[]): void
 
 	/**

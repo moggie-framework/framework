@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import process from "node:process"
 import { EventEmitter } from "node:events"
 import pathUtil from "node:path"
 import {
@@ -22,7 +23,11 @@ import {
 	deepAssign,
 	isPlainObject,
 } from "@voyage/helpers"
-import { Container } from "../container/resolver.js"
+import {
+	Container,
+	containerContext,
+	container as localContext,
+} from "../container/resolver.js"
 import { tryLoadConfigFiles } from "./configuration.js"
 import { Plugin } from "./plugin.js"
 
@@ -37,12 +42,13 @@ export class Application extends EventEmitter {
 		return createCallableAccessor(this.$config, { shouldReplaceNull: true })
 	}
 
-	constructor(opts = {}) {
+	constructor(kernel, opts = {}) {
 		super()
 		this.opts = opts
-		this.$config = {}
+		this.$config = opts.config ?? {}
 		this.$container = new Container()
 		this.$plugins = []
+		this.KernelType = kernel
 
 		this.setDefaults()
 	}
@@ -68,7 +74,9 @@ export class Application extends EventEmitter {
 		}
 
 		for (const file of files) {
-			process.loadEnvFile(file)
+			try {
+				process.loadEnvFile(file)
+			} catch (error) {}
 		}
 	}
 
@@ -111,6 +119,7 @@ export class Application extends EventEmitter {
 			}
 			this.$plugins.push(new plugin())
 		}
+		return this
 	}
 
 	async boot() {
@@ -121,38 +130,55 @@ export class Application extends EventEmitter {
 		for (const plugin of this.$plugins) {
 			await plugin.boot(this.$container)
 		}
-		this.emit("app:booted")
+		return this
 	}
 
 	@bind
 	async launching() {
 		this.emit("app:launching")
-		for (const plugin of this.plugins) {
-			await plugin.preLaunch(this.$container)
+		const container = localContext()
+		for (const plugin of this.$plugins) {
+			await plugin.preLaunch(container)
 		}
+		return this
 	}
 
 	@bind
 	async launched() {
 		this.emit("app:launched")
-		for (const plugin of this.plugins) {
-			await plugin.postLaunch(this.$container)
+		const container = localContext()
+		for (const plugin of this.$plugins) {
+			await plugin.postLaunch(container)
 		}
+		return this
 	}
 
 	@bind
 	async processing() {
 		this.emit("app:processing")
-		for (const plugin of this.plugins) {
-			await plugin.preAction(this.$container)
+		const container = localContext()
+		for (const plugin of this.$plugins) {
+			await plugin.preAction(container)
 		}
 	}
 
 	@bind
 	async processed() {
 		this.emit("app:processed")
-		for (const plugin of this.plugins) {
-			await plugin.postAction(this.$container)
+		const container = localContext()
+		for (const plugin of this.$plugins) {
+			await plugin.postAction(container)
 		}
+		return this
+	}
+
+	@bind
+	async launch() {
+		await this.boot()
+		containerContext.enterWith(this.$container)
+		const kernel = new this.KernelType(this)
+		this.$container.when("kernel").value(kernel)
+		await kernel.$boot()
+		return this
 	}
 }

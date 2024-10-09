@@ -78,7 +78,7 @@ export async function tryLoadConfigFiles(root, files) {
 }
 
 function isMissingFile(error) {
-	return error.code === "ENOENT"
+	return error.code === "ENOENT" || error.code === "ERR_MODULE_NOT_FOUND"
 }
 
 /**

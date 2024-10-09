@@ -16,8 +16,8 @@
 
 import { Class } from "../types"
 
-export function getNestedKey<OutT = any>(object: object, path: string): OutT
-export function setNestedKey(object: object, path: string, value: any)
+export function getNestedValue<OutT = any>(object: object, path: string): OutT
+export function setNestedValue(object: object, path: string, value: any): void
 
 export function isPlainObject(obj: any): obj is object
 

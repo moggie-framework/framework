@@ -142,6 +142,9 @@ export function createCallableAccessor(obj, opts) {
 	obj = isPlainObject(obj) ? obj : {}
 	const shouldReplaceNull = opts?.shouldReplaceNull ?? false
 	const accessor = (path, fallback) => {
+		if (path == null && fallback == null) {
+			return obj
+		}
 		const value = getNestedValue(obj, path)
 		if (value === undefined) {
 			return fallback

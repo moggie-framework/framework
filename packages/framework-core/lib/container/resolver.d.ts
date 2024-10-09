@@ -18,7 +18,7 @@ import type { ContainerName, HasDependencies } from "@voyage/helpers"
 import type { AsyncLocalStorage } from "node:async_hooks"
 import { ConstructionMethod, DependencyBuilder } from "./dependency"
 
-export declare const containerContext: AsyncLocalStorage<Container>
+export const containerContext: AsyncLocalStorage<Container>
 export function container(): Container
 export function container<T>(value: ContainerName): Promise<T | null>
 

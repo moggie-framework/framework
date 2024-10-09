@@ -57,7 +57,7 @@ export class DependencyBuilder {
 	 * @returns {Resolver}
 	 */
 	result(factory) {
-		this.container.register(this.name, new ValueMethod(this.name, factory))
+		this.container.register(this.name, new FactoryMethod(this.name, factory))
 		return this.container
 	}
 	/**
