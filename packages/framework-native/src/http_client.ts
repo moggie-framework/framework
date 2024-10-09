@@ -69,19 +69,18 @@ export class NativeHttpClient extends HttpClient {
 
 		if (opts.body instanceof ArrayBuffer) {
 			body = new Uint8Array(opts.body)
-		} else if (typeof opts.body !== "string") {
+		} else if (typeof opts.body === "object" && opts.body != null) {
 			body = JSON.stringify(opts.body)
 			headers.set("content-type", "application/json")
 		}
 
 		return await new Promise((resolve, reject) => {
-			console.log("Calling Rust code...", method, url, headers, body)
 			try {
 				HttpClientRequest(
 					this[INNER_CLIENT],
 					method,
 					url,
-					headers,
+					Object.fromEntries(headers),
 					body,
 					(err: Error | string | null, result: any) => {
 						if (err) {
