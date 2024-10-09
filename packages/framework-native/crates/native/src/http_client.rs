@@ -1,12 +1,12 @@
 use crate::helpers::{current_runtime, object_to_headers, throw_generic_error};
-use crate::http_types::Headers;
+use crate::http_types::{serialise_body, Headers, RequestBody};
 use crate::throw_channel_error;
-use http_body_util::{BodyExt, Empty};
+use http_body_util::BodyExt;
 use hyper::body::{Bytes, Incoming};
 use hyper::client::conn::http1::SendRequest;
 use hyper::http::uri::Authority;
 use hyper::http::HeaderValue;
-use hyper::{header, Request, Response, Uri};
+use hyper::{header, HeaderMap, Request, Response, Uri};
 use hyper_util::rt::TokioIo;
 use neon::context::FunctionContext;
 use neon::prelude::{
@@ -26,7 +26,7 @@ use tokio::task::JoinHandle;
 pub type BoxedClient = JsBox<Arc<HyperClient>>;
 
 pub struct HyperClientRuntime {
-	connections: HashMap<String, (SendRequest<Empty<Bytes>>, JoinHandle<()>)>,
+	connections: HashMap<String, (SendRequest<RequestBody>, JoinHandle<()>)>,
 }
 pub struct HyperClient(Mutex<HyperClientRuntime>);
 unsafe impl Send for HyperClient {}
@@ -54,7 +54,7 @@ impl HyperClientRuntime {
 	async fn initiate_connection(
 		&mut self,
 		url: &Uri,
-	) -> Result<&mut SendRequest<Empty<Bytes>>, String> {
+	) -> Result<&mut SendRequest<RequestBody>, String> {
 		let host = url
 			.host()
 			.ok_or_else(|| String::from("Missing host in URL"))?;
@@ -117,14 +117,15 @@ pub fn client_request(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 	let method = cx.argument::<JsString>(1)?.value(&mut cx);
 	let url = cx.argument::<JsString>(2)?.value(&mut cx);
 	let headers = cx.argument::<JsObject>(3)?;
-	// TODO: Process request body
-	let _body = cx.argument::<JsValue>(4)?;
+	let body_value = cx.argument::<JsValue>(4)?;
+	let body = serialise_body(&mut cx, &body_value)?;
 	let callback = cx.argument::<JsFunction>(5)?.root(&mut cx);
 
 	let mut hyper_headers = object_to_headers(&mut cx, &headers)?;
 	let hyper_url = url
 		.parse::<Uri>()
 		.map_err(|e| throw_generic_error(&mut cx, e))?;
+
 	let hyper_method = match hyper::Method::from_str(&method) {
 		Ok(method) => method,
 		Err(_) => cx.throw_type_error("Unrecognised HTTP method")?,
@@ -154,9 +155,11 @@ pub fn client_request(mut cx: FunctionContext) -> JsResult<JsUndefined> {
 		hyper_headers.insert(header::HOST, authority_header_value);
 
 		let mut builder = Request::builder().method(hyper_method).uri(hyper_url);
-		builder.headers_mut().replace(&mut hyper_headers);
+		if let Some(req_headers) = builder.headers_mut() {
+			req_headers.extend(hyper_headers);
+		}
 
-		let request = throw_channel_error!(channel, callback, builder.body(Empty::<Bytes>::new()));
+		let request = throw_channel_error!(channel, callback, builder.body(body));
 		let mut response: Response<Incoming> =
 			throw_channel_error!(channel, callback, sender.send_request(request).await);
 		let res_headers = response.headers().clone();

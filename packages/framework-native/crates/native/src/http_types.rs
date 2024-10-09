@@ -13,8 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+use crate::helpers::Throwable;
+use http_body_util::Full;
+use hyper::body::Bytes;
 use hyper::HeaderMap;
 use neon::prelude::*;
+use neon::types::buffer::TypedArray;
 use std::collections::HashMap;
 use std::ops::{Deref, DerefMut};
 
@@ -56,4 +60,24 @@ impl From<HeaderMap> for Headers {
 				.collect(),
 		)
 	}
+}
+
+pub type RequestBody = Full<Bytes>;
+pub fn serialise_body<'a>(
+	cx: &mut impl Context<'a>,
+	body: &Handle<JsValue>,
+) -> Throwable<RequestBody> {
+	let bytes = if body.is_a::<JsTypedArray<u8>, _>(cx) {
+		let typed = body.downcast_or_throw::<JsTypedArray<u8>, _>(cx)?;
+		let bytes = typed.as_slice(cx);
+		Bytes::copy_from_slice(bytes)
+	} else if body.is_a::<JsString, _>(cx) {
+		let typed = body.downcast_or_throw::<JsString, _>(cx)?;
+		let string = typed.value(cx);
+		Bytes::from(string)
+	} else {
+		Bytes::new()
+	};
+
+	Ok(Full::new(bytes))
 }

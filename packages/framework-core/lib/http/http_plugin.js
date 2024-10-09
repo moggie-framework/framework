@@ -26,6 +26,10 @@ export class HttpPlugin extends Plugin {
 	defaultConfigs() {
 		return {
 			http: {
+				server: {
+					port: process.env.PORT ?? 4433,
+					address: process.env.LISTEN_ADDRESS ?? "0.0.0.0",
+				},
 				client: {
 					driver: process.env.HTTP_CLIENT_DRIVER || "fetch",
 				},

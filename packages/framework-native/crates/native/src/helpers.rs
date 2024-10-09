@@ -19,6 +19,7 @@ use neon::prelude::*;
 use neon::result::Throw;
 use neon::thread::LocalKey;
 use std::error::Error;
+use std::fmt::Display;
 use std::str::FromStr;
 use tokio::runtime::Runtime;
 
@@ -27,10 +28,39 @@ pub fn current_runtime<'a>(cx: &mut impl Context<'a>) -> &'a Runtime {
 	ASYNC_RUNTIME.get_or_init(cx, || tokio::runtime::Runtime::new().unwrap())
 }
 
+pub type Throwable<T> = Result<T, Throw>;
+
+fn call_console<'a>(
+	method: &'static str,
+	cx: &mut impl Context<'a>,
+	message: impl Display,
+) -> Throwable<()> {
+	let log_message = cx.string(message.to_string());
+	let console = cx.global::<JsObject>("console")?;
+	let mut log_prop = console.prop(cx.cx_mut(), method);
+	let mut log = log_prop.bind()?;
+	log.arg(log_message)?.call()?;
+
+	Ok(())
+}
+
+#[allow(unused)]
+pub fn console_log<'a>(cx: &mut impl Context<'a>, message: impl Display) -> Throwable<()> {
+	call_console("log", cx, message)
+}
+#[allow(unused)]
+pub fn console_error<'a>(cx: &mut impl Context<'a>, message: impl Display) -> Throwable<()> {
+	call_console("error", cx, message)
+}
+#[allow(unused)]
+pub fn console_warn<'a>(cx: &mut impl Context<'a>, message: impl Display) -> Throwable<()> {
+	call_console("warn", cx, message)
+}
+
 pub fn iter_object_entries<'a: 'b, 'b>(
 	cx: &'b mut impl Context<'a>,
 	obj: &'b Handle<'a, JsObject>,
-) -> Result<Vec<(String, Handle<'a, JsValue>)>, Throw> {
+) -> Throwable<Vec<(String, Handle<'a, JsValue>)>> {
 	Ok(obj
 		.get_own_property_names(cx)?
 		.to_vec(cx)?
@@ -48,7 +78,7 @@ pub fn iter_object_entries<'a: 'b, 'b>(
 pub fn object_to_headers<'a>(
 	cx: &mut impl Context<'a>,
 	obj: &Handle<'a, JsObject>,
-) -> Result<HeaderMap, Throw> {
+) -> Throwable<HeaderMap> {
 	let header_collection = iter_object_entries(cx, obj)?;
 	let header_list = header_collection
 		.into_iter()

@@ -62,21 +62,20 @@ export class NativeHttpClient extends HttpClient {
 	async request(
 		method: SupportedMethod,
 		url: string,
-		opts: HttpRequestOpts,
+		opts: HttpRequestOpts = {},
 	): Promise<Response> {
 		const headers = new Headers(opts.headers ?? {})
 		let body = opts.body ?? null
 
 		if (opts.body instanceof ArrayBuffer) {
 			body = new Uint8Array(opts.body)
-		} else if (typeof opts.body === "string") {
-			body = new TextEncoder().encode(opts.body)
-		} else {
+		} else if (typeof opts.body !== "string") {
 			body = JSON.stringify(opts.body)
 			headers.set("content-type", "application/json")
 		}
 
 		return await new Promise((resolve, reject) => {
+			console.log("Calling Rust code...", method, url, headers, body)
 			try {
 				HttpClientRequest(
 					this[INNER_CLIENT],
@@ -92,11 +91,19 @@ export class NativeHttpClient extends HttpClient {
 								reject(err)
 							}
 						} else {
+							let res_status =
+								typeof result.status === "number"
+									? result.status
+									: parseInt(result.status, 10)
+
+							let res_body = null
+							if (res_status !== 204 && res_status !== 304) {
+								res_body = result.body
+							}
+
 							resolve(
-								new Response(result.body, {
-									// @ts-ignore
-									url,
-									status: result.status,
+								new Response(res_body, {
+									status: res_status,
 									headers: result.headers,
 								}),
 							)

@@ -90,4 +90,6 @@ export class Application extends EventEmitter<ApplicationEventMap> {
 	 * Emit the app:processed event and run the post-action step for any registered plugins
 	 */
 	processed(): Promise<void>
+
+	launch(): Promise<void>
 }
