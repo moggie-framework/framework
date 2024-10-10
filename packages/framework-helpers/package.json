@@ -1,21 +1,22 @@
 {
-  "name": "@moggie/helpers",
-  "version": "0.1.0",
-  "description": "Utilities used across different Moggie libraries",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "test": "node --test --enable-source-maps --import @moggie/runtime"
-  },
-  "author": "Louis Capitanchik <louis@microhacks.co.uk>",
-  "license": "Apache-2.0",
-  "exports": {
-    ".": {
-      "default": "./index.js",
-      "types": "./index.d.ts"
-    },
-    "./types": {
-      "types": "./types.d.ts"
-    }
-  }
+	"name": "@moggie/helpers",
+	"version": "0.1.0",
+	"description": "Utilities used across different Moggie libraries",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "node --test --enable-source-maps --import @moggie/runtime"
+	},
+	"author": "Louis Capitanchik <louis@microhacks.co.uk>",
+	"license": "Apache-2.0",
+	"repository": "https://github.com/moggie-framework/framework",
+	"exports": {
+		".": {
+			"default": "./index.js",
+			"types": "./index.d.ts"
+		},
+		"./types": {
+			"types": "./types.d.ts"
+		}
+	}
 }

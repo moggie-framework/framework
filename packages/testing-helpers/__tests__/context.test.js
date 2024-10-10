@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-import { describe, it } from 'node:test'
-import { testPlan } from '../context.js'
-import assert from 'assert/strict'
-import { setTimeout } from 'node:timers/promises'
-
+import { describe, it } from "node:test"
+import { testPlan } from "../context.js"
+import assert from "assert/strict"
+import { setTimeout } from "node:timers/promises"
 
 describe("Test Plan Contract", () => {
 	it("Expects no calls when amount is 0", () => {
-		testPlan(0, (plan) => {})
+		testPlan(0, plan => {})
 	})
 
 	it("Should handle synchronous callback", () => {
-		testPlan(2, (plan) => {
+		testPlan(2, plan => {
 			plan()
 			plan()
-    })
+		})
 	})
 
 	it("Should reject when callback is called more than expected", () => {
 		assert.throws(() => {
-			testPlan(2, (plan) => {
+			testPlan(2, plan => {
 				plan()
 				plan()
 				plan()
@@ -44,34 +43,38 @@ describe("Test Plan Contract", () => {
 
 	it("Should reject when callback is called less than expected", () => {
 		assert.throws(() => {
-      testPlan(3, (plan) => {
-        plan()
-        plan()
-      })
-    })
+			testPlan(3, plan => {
+				plan()
+				plan()
+			})
+		})
 	})
 
 	it("Should handle asynchronous callback", async () => {
-		await testPlan(2, async (plan) => {
+		await testPlan(2, async plan => {
 			await plan()
 			await setTimeout(10)
-      await plan()
+			await plan()
 		})
 	})
 
 	it("Should reject when asynchronous callback is called more than expected", async () => {
-		await assert.rejects(testPlan(2, async (plan) => {
-			await plan()
-			await plan()
-			await setTimeout(10)
-			await plan()
-    }))
+		await assert.rejects(
+			testPlan(2, async plan => {
+				await plan()
+				await plan()
+				await setTimeout(10)
+				await plan()
+			}),
+		)
 	})
 
 	it("Should reject when asynchronous callback is called less than expected", async () => {
-		await assert.rejects(testPlan(3, async (plan) => {
-      await setTimeout(10)
-      await plan()
-    }))
+		await assert.rejects(
+			testPlan(3, async plan => {
+				await setTimeout(10)
+				await plan()
+			}),
+		)
 	})
 })

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "format": "npx prettier --write '{packages,scripts,examples}/**/*.{js,ts}' && cd packages/framework-native && cargo fmt",
+    "format": "npx prettier --write '{packages,scripts,examples}/**/*.{js,ts,json}' && cd packages/framework-native && cargo fmt",
     "test": "npm --workspaces test --experimental-test-coverage",
     "test:direct": "node --test --experimental-test-coverage --enable-source-maps --import @moggie/runtime",
     "test:github": "node --test --enable-source-maps --import @moggie/runtime --test-reporter spec",
