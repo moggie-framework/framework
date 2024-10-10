@@ -119,8 +119,7 @@ describe("Deep assignment", () => {
 			BigInt(1234),
 			Foo,
 		]
-		const nameOf = thing =>
-			thing?.name ?? thing?.constructor?.name ?? typeof thing
+		const nameOf = thing => thing?.name ?? thing?.constructor?.name ?? typeof thing
 
 		for (const first of matrixInput) {
 			for (const second of matrixInput) {
@@ -166,14 +165,8 @@ describe("Deep assignment", () => {
 		const result = deepAssign(obj1, obj2)
 
 		assert(Array.isArray(result.a), "Array property should not be merged")
-		assert(
-			typeof result.b === "function",
-			"Function property should not be merged",
-		)
-		assert(
-			typeof result.c === "function",
-			"Function property should not be merged",
-		)
+		assert(typeof result.b === "function", "Function property should not be merged")
+		assert(typeof result.c === "function", "Function property should not be merged")
 	})
 })
 

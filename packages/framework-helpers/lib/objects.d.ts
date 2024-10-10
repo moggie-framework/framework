@@ -21,19 +21,10 @@ export function setNestedValue(object: object, path: string, value: any): void
 
 export function isPlainObject(obj: any): obj is object
 
-export function deepAssign(
-	target: null | undefined,
-	source: null | undefined,
-): null
+export function deepAssign(target: null | undefined, source: null | undefined): null
 export function deepAssign(target: object, source: object): object
-export function deepAssign<Source = object>(
-	target: null | undefined,
-	source: Source,
-): Source
-export function deepAssign<Target = object>(
-	target: Target,
-	source: null | undefined,
-): Target
+export function deepAssign<Source = object>(target: null | undefined, source: Source): Source
+export function deepAssign<Target = object>(target: Target, source: null | undefined): Target
 
 export function setClassName(clazz: Class<any>, name: string)
 
@@ -43,17 +34,11 @@ export type CallableAccessorOptions<NullValue extends boolean = boolean> = {
 
 declare function Accessor(path: string): any | undefined | null
 declare function Accessor<Default>(path: string, fallback: Default): any | null
-declare function AccessorWithoutNull<Default>(
-	path: string,
-): Default | null | undefined
-declare function AccessorWithoutNull<Default>(
-	path: string,
-	fallback: Default,
-): Default
+declare function AccessorWithoutNull<Default>(path: string): Default | null | undefined
+declare function AccessorWithoutNull<Default>(path: string, fallback: Default): Default
 
 export type CallableAccessor = typeof Accessor & Record<string, any>
-export type CallableAccessorWithoutNull = typeof AccessorWithoutNull &
-	Record<string, any>
+export type CallableAccessorWithoutNull = typeof AccessorWithoutNull & Record<string, any>
 
 export function createCallableAccessor(object: object): typeof Accessor
 export function createCallableAccessor(

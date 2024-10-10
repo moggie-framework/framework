@@ -17,12 +17,7 @@
 import assert from "node:assert/strict"
 
 function isPromise(value) {
-	return (
-		typeof value === "object" &&
-		value !== null &&
-		"then" in value &&
-		"catch" in value
-	)
+	return typeof value === "object" && value !== null && "then" in value && "catch" in value
 }
 
 /**
@@ -50,10 +45,7 @@ export function testPlan(amount, cb) {
 			assert.strictEqual(
 				count.value,
 				amount,
-				"Test plan failed: expected exactly " +
-					amount +
-					" calls, but got " +
-					count.value,
+				"Test plan failed: expected exactly " + amount + " calls, but got " + count.value,
 			)
 			return output
 		})
@@ -61,10 +53,7 @@ export function testPlan(amount, cb) {
 		assert.strictEqual(
 			count.value,
 			amount,
-			"Test plan failed: expected exactly " +
-				amount +
-				" calls, but got " +
-				count.value,
+			"Test plan failed: expected exactly " + amount + " calls, but got " + count.value,
 		)
 		return value
 	}

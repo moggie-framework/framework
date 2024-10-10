@@ -28,7 +28,4 @@ export type FileInfo = {
 	filename: string
 }
 
-export function tryLoadConfigFiles(
-	root: string,
-	files: string[],
-): Promise<Record<string, any>>
+export function tryLoadConfigFiles(root: string, files: string[]): Promise<Record<string, any>>

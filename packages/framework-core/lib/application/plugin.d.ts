@@ -33,9 +33,7 @@ export abstract class Plugin {
 }
 
 type SingleMethodPluginCallback = (container: Container) => Promise<void> | void
-type SingleMethodPluginFactory = (
-	callback: SingleMethodPluginCallback,
-) => Plugin
+type SingleMethodPluginFactory = (callback: SingleMethodPluginCallback) => Plugin
 
 export declare const onBoot: SingleMethodPluginFactory
 export declare const preLaunch: SingleMethodPluginFactory
@@ -43,7 +41,4 @@ export declare const postLaunch: SingleMethodPluginFactory
 export declare const preAction: SingleMethodPluginFactory
 export declare const postAction: SingleMethodPluginFactory
 
-export declare function registerConfig(
-	name: string,
-	value: Record<any, any>,
-): Plugin
+export declare function registerConfig(name: string, value: Record<any, any>): Plugin

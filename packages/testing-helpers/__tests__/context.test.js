@@ -77,4 +77,25 @@ describe("Test Plan Contract", () => {
 			}),
 		)
 	})
+
+	it("Should allow errors occurring in the callback to bubble", () => {
+		// testPlan has a descriptive message in the assertion error, whereas we need to check for the basic
+		// inner error message, despite `plan` not being called enough times
+		assert.throws(() => {
+			testPlan(1, plan => {
+				assert(false, "TEST")
+			})
+		}, "[ERR_ASSERTION]: TEST")
+	})
+
+	it("Should allow errors occurring async callbacks to bubble", async () => {
+		// testPlan has a descriptive message in the assertion error, whereas we need to check for the basic
+		// inner error message, despite `plan` not being called enough times
+		await assert.rejects(
+			testPlan(1, async plan => {
+				assert(false, "TEST")
+			}),
+			"[ERR_ASSERTION]: TEST",
+		)
+	})
 })

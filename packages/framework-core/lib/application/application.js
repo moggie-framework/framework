@@ -17,17 +17,8 @@
 import process from "node:process"
 import { EventEmitter } from "node:events"
 import pathUtil from "node:path"
-import {
-	bind,
-	createCallableAccessor,
-	deepAssign,
-	isPlainObject,
-} from "@moggie/helpers"
-import {
-	Container,
-	containerContext,
-	container as localContext,
-} from "../container/resolver.js"
+import { bind, createCallableAccessor, deepAssign, isPlainObject } from "@moggie/helpers"
+import { Container, containerContext, container as localContext } from "../container/resolver.js"
 import { tryLoadConfigFiles } from "./configuration.js"
 import { Plugin } from "./plugin.js"
 

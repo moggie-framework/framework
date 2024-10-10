@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-export {
-	Container,
-	containerContext,
-	container,
-} from "../lib/container/resolver.js"
+export { Container, containerContext, container } from "../lib/container/resolver.js"
 export { ConstructionMethod } from "../lib/container/dependency.js"
 export { Facade } from "../lib/container/facade.js"
 export { Application } from "../lib/application/application.js"

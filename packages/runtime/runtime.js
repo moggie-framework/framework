@@ -24,10 +24,7 @@ const supportedFileGlobs = [".js", ".jsx", ".ts", ".tsx"]
  * @type {LoadHook} load
  */
 const load = async function load(url, context, nextLoad) {
-	if (
-		url.startsWith("file:") &&
-		supportedFileGlobs.some(glob => url.endsWith(glob))
-	) {
+	if (url.startsWith("file:") && supportedFileGlobs.some(glob => url.endsWith(glob))) {
 		const path = new URL(url)
 		let file = (await readFile(path, "utf8")).toString()
 		const transformed = await transform(file, {

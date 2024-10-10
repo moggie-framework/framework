@@ -26,11 +26,7 @@ export function resolveName(classOrString) {
 	if (typeof classOrString === "string") {
 		return classOrString
 	}
-	return (
-		classOrString?.[Semantics.Alias] ??
-		classOrString?.prototype?.constructor?.name ??
-		"null"
-	)
+	return classOrString?.[Semantics.Alias] ?? classOrString?.prototype?.constructor?.name ?? "null"
 }
 
 /**

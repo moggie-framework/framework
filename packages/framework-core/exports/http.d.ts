@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-export type {
-	SupportedMethod,
-	HttpRequestOpts,
-} from "../lib/http/client/http_client.js"
+export type { SupportedMethod, HttpRequestOpts } from "../lib/http/client/http_client.js"
 
 export { HttpPlugin } from "../lib/http/http_plugin.js"
 export { HttpClient } from "../lib/http/client/http_client.js"

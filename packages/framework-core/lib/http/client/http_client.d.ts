@@ -30,11 +30,7 @@ export type HttpRequestOpts = {
 }
 
 export abstract class HttpClient {
-	request(
-		method: SupportedMethod,
-		url: string,
-		opts: HttpRequestOpts,
-	): Promise<Response>
+	request(method: SupportedMethod, url: string, opts: HttpRequestOpts): Promise<Response>
 	get(url: string, opts: HttpRequestOpts): Promise<Response>
 	post(url: string, opts: HttpRequestOpts): Promise<Response>
 	put(url: string, opts: HttpRequestOpts): Promise<Response>

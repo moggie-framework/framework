@@ -18,14 +18,9 @@ import { Class } from "@moggie/helpers/types"
 import { Facade } from "../container/facade"
 
 export type ManagedConfig<ConfigType> = ConfigType & { driver: string | null }
-export type BuilderFn<Config extends object, Output> = (
-	config: Config,
-) => Output
+export type BuilderFn<Config extends object, Output> = (config: Config) => Output
 
-export abstract class Manager<
-	ManagedInterface = any,
-	ConfigType = any,
-> extends Facade {
+export abstract class Manager<ManagedInterface = any, ConfigType = any> extends Facade {
 	variants: Map<string, BuilderFn<any, ManagedInterface>>
 	instances: Map<string, ManagedInterface>
 

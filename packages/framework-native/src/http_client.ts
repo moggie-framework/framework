@@ -91,9 +91,7 @@ export class NativeHttpClient extends HttpClient {
 							}
 						} else {
 							let res_status =
-								typeof result.status === "number"
-									? result.status
-									: parseInt(result.status, 10)
+								typeof result.status === "number" ? result.status : parseInt(result.status, 10)
 
 							let res_body = null
 							if (res_status !== 204 && res_status !== 304) {

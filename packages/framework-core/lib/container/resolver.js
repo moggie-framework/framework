@@ -16,12 +16,7 @@
 
 import { AsyncLocalStorage } from "node:async_hooks"
 import { EventEmitter } from "node:events"
-import {
-	dependenciesOf,
-	hasDependencies,
-	resolveName,
-	Semantics,
-} from "@moggie/helpers"
+import { dependenciesOf, hasDependencies, resolveName, Semantics } from "@moggie/helpers"
 import { DependencyBuilder } from "./dependency.js"
 /** import { ContainerName, Resolvable } from '@moggie/helpers' */
 
@@ -123,10 +118,7 @@ export class Container extends EventEmitter {
 	 */
 	canResolve(name) {
 		const resolvedName = resolveName(name)
-		return (
-			this[Mapping].has(resolvedName) ||
-			(this[Parent] && this[Parent].canResolve(name))
-		)
+		return this[Mapping].has(resolvedName) || (this[Parent] && this[Parent].canResolve(name))
 	}
 
 	/**
@@ -152,10 +144,7 @@ export class Container extends EventEmitter {
 			try {
 				return Promise.resolve(func(...dependencies))
 			} catch (error) {
-				if (
-					error instanceof TypeError &&
-					error.message.startsWith("Class constructor")
-				) {
+				if (error instanceof TypeError && error.message.startsWith("Class constructor")) {
 					return new func(...dependencies)
 				}
 				throw error

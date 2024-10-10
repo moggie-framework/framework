@@ -73,11 +73,7 @@ export class ServerKernel extends Kernel {
 		this.$server.listen(serverConfig.port ?? 4433)
 
 		const address = this.$server.address()
-		console.log(
-			"Server listening on http://%s:%d",
-			formatServerAddress(address),
-			address.port,
-		)
+		console.log("Server listening on http://%s:%d", formatServerAddress(address), address.port)
 	}
 }
 

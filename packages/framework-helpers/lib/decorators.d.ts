@@ -15,8 +15,6 @@
  */
 
 export function depends(...names: string[]): ClassDecorator
-export function alias(
-	name: string | (new (...args: any[]) => any),
-): ClassDecorator
+export function alias(name: string | (new (...args: any[]) => any)): ClassDecorator
 export const as: typeof alias
 export const bind: MethodDecorator
