@@ -1,0 +1,22 @@
+{
+  "name": "@moggie/testing-helpers",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Utilities for supporting other test libraries, including backporting features from newer Node.js versions",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "testing",
+    "tests",
+    "moggie",
+    "helpers"
+  ],
+  "author": "Louis Capitanchik <louis@microhacks.co.uk>",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./index.js"
+  }
+}

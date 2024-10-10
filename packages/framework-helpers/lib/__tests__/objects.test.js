@@ -24,6 +24,7 @@ import {
 	getNestedValue,
 	isPlainObject,
 } from "../objects.js"
+import { testPlan } from "@moggie/testing-helpers"
 
 describe("Nested object accessor", () => {
 	it("Returns nested values", () => {
@@ -318,27 +319,28 @@ describe("Generic Callable", () => {
 	})
 
 	it("Passes parameters to the __call method", t => {
-		t.plan(3)
+		testPlan(3, plan => {
+			class CallableClass {
+				constructor() {
+					return createCallable(this)
+				}
 
-		class CallableClass {
-			constructor() {
-				return createCallable(this)
+				double(value) {
+					plan()
+					return value * 2
+				}
+
+				__call(first, second) {
+					plan()
+					assert.equal(first, 100)
+					assert.equal(this.double(second), 300)
+					return first + this.double(second)
+				}
 			}
 
-			double(value) {
-				return value * 2
-			}
-
-			__call(first, second) {
-				t.assert.equal(first, 100)
-				t.assert.equal(this.double(second), 300)
-
-				return first + this.double(second)
-			}
-		}
-
-		const inst = new CallableClass()
-		t.assert.equal(inst(100, 150), 400)
+			const inst = new CallableClass()
+			assert.equal(inst(100, 150), 400)
+		})
 	})
 
 	it("Inherits callability from parent class", () => {

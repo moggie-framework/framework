@@ -22,6 +22,7 @@ import { postLaunch, preLaunch, registerConfig } from "../plugin.js"
 import { Kernel } from "../kernel.js"
 import { container, containerContext } from "../../container/resolver.js"
 import { withApplication } from "./test_helpers.js"
+import { testPlan } from "@moggie/testing-helpers"
 
 describe("App config", () => {
 	it("Loads from a default provider via plugin", async () => {
@@ -111,24 +112,25 @@ describe("App plugin system", () => {
 	})
 
 	it("Runs in a container context containing the app", async t => {
-		t.plan(1)
+		await testPlan(1, async plan => {
+			const app = new Application()
+			app.register(
+				preLaunch(async container => {
+					const innerApp = await container.resolve("app")
+					assert.ok(
+						innerApp === app,
+						"Container context does not contain the app instance",
+					)
+					plan()
+				}),
+			)
 
-		const app = new Application()
-		app.register(
-			preLaunch(async container => {
-				const innerApp = await container.resolve("app")
-				t.assert.ok(
-					innerApp === app,
-					"Container context does not contain the app instance",
-				)
-			}),
-		)
-
-		// Running the full "launch" sequence for the app would enter a container context.
-		// For the sake of not potentially steamrolling other tests, we just run in an isolated
-		// context for this test
-		await containerContext.run(app.$container, async () => {
-			await app.launching()
+			// Running the full "launch" sequence for the app would enter a container context.
+			// For the sake of not potentially steamrolling other tests, we just run in an isolated
+			// context for this test
+			await containerContext.run(app.$container, async () => {
+				await app.launching()
+			})
 		})
 	})
 
@@ -153,20 +155,23 @@ describe("App plugin system", () => {
 		)
 	})
 
-	it("Maintains values between plugins in the container", async t => {
-		t.plan(1)
-		const app = new Application()
-		app.register(
-			preLaunch(async container => {
-				container.when("someValue").value(123)
-			}),
-			preLaunch(async container => {
-				const someValue = await container.resolve("someValue")
-				t.assert.ok(someValue === 123, "Value not preserved between plugins")
-			}),
-		)
+	it("Maintains values between plugins in the container", async () => {
+		await testPlan(2, async plan => {
+			const app = new Application()
+			app.register(
+				preLaunch(async container => {
+					container.when("someValue").value(123)
+					plan()
+				}),
+				preLaunch(async container => {
+					const someValue = await container.resolve("someValue")
+					assert.ok(someValue === 123, "Value not preserved between plugins")
+					plan()
+				}),
+			)
 
-		await app.launching()
+			await app.launching()
+		})
 	})
 
 	it("Propagates errors from preLaunch plugins", async () => {
