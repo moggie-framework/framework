@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/VoyageCore.iml" filepath="$PROJECT_DIR$/.idea/VoyageCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MoggieFramework.iml" filepath="$PROJECT_DIR$/.idea/MoggieFramework.iml" />
     </modules>
   </component>
 </project>
