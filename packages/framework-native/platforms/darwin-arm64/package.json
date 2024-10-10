@@ -1,6 +1,6 @@
 {
-  "name": "@voyage/native-darwin-arm64",
-  "description": "Prebuilt binary package for `@voyage/native` on `darwin-arm64`.",
+  "name": "@moggie/native-darwin-arm64",
+  "description": "Prebuilt binary package for `@moggie/native` on `darwin-arm64`.",
   "version": "0.1.0",
   "os": [
     "darwin"

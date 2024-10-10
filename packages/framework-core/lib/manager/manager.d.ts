@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Class } from "@voyage/helpers/types"
+import { Class } from "@moggie/helpers/types"
 import { Facade } from "../container/facade"
 
 export type ManagedConfig<ConfigType> = ConfigType & { driver: string | null }

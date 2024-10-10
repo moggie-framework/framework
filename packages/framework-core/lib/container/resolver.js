@@ -21,9 +21,9 @@ import {
 	hasDependencies,
 	resolveName,
 	Semantics,
-} from "@voyage/helpers"
+} from "@moggie/helpers"
 import { DependencyBuilder } from "./dependency.js"
-/** import { ContainerName, Resolvable } from '@voyage/helpers' */
+/** import { ContainerName, Resolvable } from '@moggie/helpers' */
 
 /**
  * Private accessor for a resolver to store mappings between an identifier and the method for resolving it

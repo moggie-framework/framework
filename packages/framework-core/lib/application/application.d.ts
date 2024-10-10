@@ -15,7 +15,7 @@
  */
 
 import type { EventEmitter } from "node:events"
-import { CallableAccessorWithoutNull } from "@voyage/helpers"
+import { CallableAccessorWithoutNull } from "@moggie/helpers"
 import type { Plugin } from "./plugin"
 import { Kernel } from "./kernel"
 import { Container } from "../container/resolver"

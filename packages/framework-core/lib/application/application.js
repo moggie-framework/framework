@@ -22,7 +22,7 @@ import {
 	createCallableAccessor,
 	deepAssign,
 	isPlainObject,
-} from "@voyage/helpers"
+} from "@moggie/helpers"
 import {
 	Container,
 	containerContext,

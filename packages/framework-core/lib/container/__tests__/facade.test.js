@@ -18,7 +18,7 @@ import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 import { Facade } from "../facade.js"
 import { Container, containerContext } from "../resolver.js"
-import { alias } from "@voyage/helpers"
+import { alias } from "@moggie/helpers"
 
 describe("Facade Static Accessor", () => {
 	it("Will resolve the correct concretion registered to the container when called", async () => {

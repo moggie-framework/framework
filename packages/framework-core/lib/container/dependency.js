@@ -15,7 +15,7 @@
  */
 
 import { Cache } from "./resolver.js"
-import { hasDependencies, resolveName } from "@voyage/helpers"
+import { hasDependencies, resolveName } from "@moggie/helpers"
 
 export class DependencyBuilder {
 	constructor(name, container) {

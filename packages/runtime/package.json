@@ -1,15 +1,15 @@
 {
-  "name": "@voyage/runtime",
+  "name": "@moggie/runtime",
   "version": "0.1.0",
-  "description": "Enable stage-3 proposals in regular code, used by Voyage framework",
+  "description": "Enable stage-3 proposals in regular code, used by Moggie framework",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node --test --enable-source-maps --import @voyage/runtime"
+    "test": "node --test --enable-source-maps --import @moggie/runtime"
   },
   "keywords": [
     "runtime",
-    "voyage",
+    "moggie",
     "stage-3",
     "decorators"
   ],

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type { ContainerName, HasDependencies } from "@voyage/helpers"
+import type { ContainerName, HasDependencies } from "@moggie/helpers"
 import type { AsyncLocalStorage } from "node:async_hooks"
 import { ConstructionMethod, DependencyBuilder } from "./dependency"
 

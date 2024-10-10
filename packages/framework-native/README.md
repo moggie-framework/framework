@@ -1,6 +1,6 @@
 # native
 
-**native:** n-api implementations of Voyage types
+**native:** n-api implementations of Moggie types
 
 This project was bootstrapped by [create-neon](https://www.npmjs.com/package/create-neon).
 

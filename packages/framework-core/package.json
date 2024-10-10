@@ -1,22 +1,22 @@
 {
-  "name": "@voyage/core",
+  "name": "@moggie/core",
   "version": "0.1.0",
-  "description": "Core components for Voyage apps",
+  "description": "Core components for Moggie apps",
   "main": "index.js",
   "type": "module",
   "devDependencies": {},
   "scripts": {
-    "test": "node --test --enable-source-maps --import @voyage/runtime"
+    "test": "node --test --enable-source-maps --import @moggie/runtime"
   },
   "keywords": [
     "framework",
-    "voyage",
+    "moggie",
     "di",
     "ioc"
   ],
   "dependencies": {
-    "@voyage/helpers": "^0.1.0",
-    "@voyage/runtime": "^0.1.0"
+    "@moggie/helpers": "^0.1.0",
+    "@moggie/runtime": "^0.1.0"
   },
   "author": "Louis Capitanchik <louis@microhacks.co.uk>",
   "license": "Apache-2.0",

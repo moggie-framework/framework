@@ -1,7 +1,7 @@
 {
-  "name": "@voyage/native",
+  "name": "@moggie/native",
   "version": "0.1.0",
-  "description": "n-api implementations of Voyage types",
+  "description": "n-api implementations of Moggie types",
   "main": "./lib/index.cjs",
   "type": "module",
   "scripts": {
@@ -32,7 +32,7 @@
   ],
   "neon": {
     "type": "library",
-    "org": "@voyage",
+    "org": "@moggie",
     "platforms": "common",
     "load": "./src/load.cts"
   },
@@ -44,6 +44,6 @@
   },
   "dependencies": {
     "@neon-rs/load": "^0.1.73",
-    "@voyage/core": "^0.1.0"
+    "@moggie/core": "^0.1.0"
   }
 }

@@ -16,8 +16,8 @@
 
 import { Native } from "./load.js"
 import type { InnerHttpClientToken } from "./load.js"
-import { HttpClient, HttpRequestOpts } from "@voyage/core/http"
-import type { SupportedMethod } from "@voyage/core/http"
+import { HttpClient, HttpRequestOpts } from "@moggie/core/http"
+import type { SupportedMethod } from "@moggie/core/http"
 
 const { HttpClientRequest, HttpClientCreate } = Native
 

@@ -1,7 +1,7 @@
 [package]
 name = "native"
 version = "0.1.0"
-description = "n-api implementations of Voyage types"
+description = "n-api implementations of Moggie types"
 authors = ["Louis Capitanchik <louis@microhacks.co.uk>"]
 license = "Apache-2.0"
 edition = "2021"

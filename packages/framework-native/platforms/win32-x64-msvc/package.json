@@ -1,6 +1,6 @@
 {
-  "name": "@voyage/native-win32-x64-msvc",
-  "description": "Prebuilt binary package for `@voyage/native` on `win32-x64-msvc`.",
+  "name": "@moggie/native-win32-x64-msvc",
+  "description": "Prebuilt binary package for `@moggie/native` on `win32-x64-msvc`.",
   "version": "0.1.0",
   "os": [
     "win32"

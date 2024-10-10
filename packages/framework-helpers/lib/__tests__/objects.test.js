@@ -19,7 +19,8 @@ import { describe, it } from "node:test"
 import {
 	createCallable,
 	createCallableAccessor,
-	deepAssign, deferProxyImplementation,
+	deepAssign,
+	deferProxyImplementation,
 	getNestedValue,
 	isPlainObject,
 } from "../objects.js"
@@ -286,13 +287,12 @@ describe("Callable accessor", () => {
 	})
 })
 
-
 describe("Generic Callable", () => {
 	it("Makes a constructed class instance callable", () => {
 		class CallableClass {
 			constructor() {
 				return createCallable(this)
-      }
+			}
 			__call() {}
 		}
 
@@ -302,20 +302,22 @@ describe("Generic Callable", () => {
 
 	it("Does not interfere with standard class behaviours", () => {
 		class CallableClass {
-      constructor() {
+			constructor() {
 				this.foobar = 890
 				return createCallable(this)
 			}
-      method() { return 123 }
+			method() {
+				return 123
+			}
 			__call() {}
-    }
+		}
 
-    const inst = new CallableClass()
+		const inst = new CallableClass()
 		assert.equal(inst.method(), 123)
 		assert.equal(inst.foobar, 890)
 	})
 
-	it("Passes parameters to the __call method", (t) => {
+	it("Passes parameters to the __call method", t => {
 		t.plan(3)
 
 		class CallableClass {
@@ -323,7 +325,9 @@ describe("Generic Callable", () => {
 				return createCallable(this)
 			}
 
-			double(value) { return value * 2 }
+			double(value) {
+				return value * 2
+			}
 
 			__call(first, second) {
 				t.assert.equal(first, 100)
@@ -339,59 +343,67 @@ describe("Generic Callable", () => {
 
 	it("Inherits callability from parent class", () => {
 		class ParentClass {
-      constructor() {
-        return createCallable(this)
-      }
+			constructor() {
+				return createCallable(this)
+			}
 
-      parentMethod() { return "parent method" }
+			parentMethod() {
+				return "parent method"
+			}
 
-      __call() {}
-    }
+			__call() {}
+		}
 
-    class ChildClass extends ParentClass {
-      childMethod() { return "child method" }
-    }
+		class ChildClass extends ParentClass {
+			childMethod() {
+				return "child method"
+			}
+		}
 
-    const parentInst = new ParentClass()
-    const childInst = new ChildClass()
+		const parentInst = new ParentClass()
+		const childInst = new ChildClass()
 
-    assert.equal(parentInst.parentMethod(), "parent method")
-    assert.equal(childInst.childMethod(), "child method")
+		assert.equal(parentInst.parentMethod(), "parent method")
+		assert.equal(childInst.childMethod(), "child method")
 
-    assert.doesNotThrow(() => parentInst())
-    assert.doesNotThrow(() => childInst())
+		assert.doesNotThrow(() => parentInst())
+		assert.doesNotThrow(() => childInst())
 	})
 
 	it("Child constructor maintains callability", () => {
 		class ParentClass {
-      constructor() {
-        return createCallable(this)
-      }
-      __call() { return "parent method" }
-    }
+			constructor() {
+				return createCallable(this)
+			}
+			__call() {
+				return "parent method"
+			}
+		}
 
-    class ChildClass extends ParentClass {
-      constructor() {
-        super()
-      }
-      __call() {
-        return "child method"
-      }
-    }
+		class ChildClass extends ParentClass {
+			constructor() {
+				super()
+			}
+			__call() {
+				return "child method"
+			}
+		}
 
-    const parentInst = new ParentClass()
-    const childInst = new ChildClass()
+		const parentInst = new ParentClass()
+		const childInst = new ChildClass()
 
-    assert.doesNotThrow(() => parentInst())
-    assert.doesNotThrow(() => childInst())
+		assert.doesNotThrow(() => parentInst())
+		assert.doesNotThrow(() => childInst())
 	})
 
 	it("Supports overriding __call method in inheritance chain", () => {
 		class ParentClass {
 			constructor() {
-        return createCallable(this)
-      }
-			__call() { return "parent method" }
+				return createCallable(this)
+			}
+			__call() {
+				return "parent method"
+			}
 		}
 
 		class ChildClass extends ParentClass {
@@ -403,7 +415,7 @@ describe("Generic Callable", () => {
 		const parentInst = new ParentClass()
 		const childInst = new ChildClass()
 
-    assert.equal(parentInst(), "parent method")
+		assert.equal(parentInst(), "parent method")
 		assert.equal(childInst(), "child method")
 	})
 })

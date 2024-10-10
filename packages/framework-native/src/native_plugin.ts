@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Container, Plugin } from "@voyage/core/framework"
-import { HttpClientManager } from "@voyage/core/http"
+import { Container, Plugin } from "@moggie/core/framework"
+import { HttpClientManager } from "@moggie/core/http"
 import { NativeHttpClient } from "./http_client.js"
 
 export class NativePlugin extends Plugin {

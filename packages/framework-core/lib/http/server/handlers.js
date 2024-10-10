@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { bind, createCallable, depends, setClassName } from "@voyage/helpers"
+import { bind, createCallable, depends, setClassName } from "@moggie/helpers"
 
 export class RequestHandler {
 	constructor() {
@@ -31,34 +31,34 @@ export function handler(deps = [], cb) {
 	@depends(deps)
 	class AnonymousHandler extends RequestHandler {
 		constructor(...args) {
-      super()
+			super()
 			this.deps = args ?? []
 			this.handle = cb
-    }
+		}
 
 		@bind
 		__call(next) {
 			return Promise.resolve(this.handle.apply(this, this.deps.concat([next])))
 		}
 	}
-	setClassName(AnonymousHandler, `RequestHandler<${ cb.name || 'anonymous'}>`)
+	setClassName(AnonymousHandler, `RequestHandler<${cb.name || "anonymous"}>`)
 	return AnonymousHandler
 }
 
 /**
- * Adapters for other web frameworks like Connect, adapting their middleware to work with Voyage.
+ * Adapters for other web frameworks like Connect, adapting their middleware to work with Moggie.
  *
  * @property {(Function) => RequestHandler} connect
  */
 export const adapt = {
 	/**
-	 * Adapt a Connect middleware to a Voyage RequestHandler. There is no specific guarantee that all Connect middleware
-	 * will work with Voyage, depending on how it adapts the built-in request/response objects.
+	 * Adapt a Connect middleware to a Moggie RequestHandler. There is no specific guarantee that all Connect middleware
+	 * will work with Moggie, depending on how it adapts the built-in request/response objects.
 	 *
 	 * @param {Function} cb
 	 * @returns {RequestHandler}
 	 */
 	connect(cb) {
-		return handler(['raw-request', 'raw-response'], cb)
-	}
+		return handler(["raw-request", "raw-response"], cb)
+	},
 }

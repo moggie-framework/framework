@@ -21,11 +21,11 @@ const require = createRequire(import.meta.url)
 
 export const Native = proxy({
 	platforms: {
-		"win32-x64-msvc": () => require("@voyage/native-win32-x64-msvc"),
-		"darwin-x64": () => require("@voyage/native-darwin-x64"),
-		"darwin-arm64": () => require("@voyage/native-darwin-arm64"),
-		"linux-x64-gnu": () => require("@voyage/native-linux-x64-gnu"),
-		"linux-arm64-gnu": () => require("@voyage/native-linux-arm64-gnu"),
+		"win32-x64-msvc": () => require("@moggie/native-win32-x64-msvc"),
+		"darwin-x64": () => require("@moggie/native-darwin-x64"),
+		"darwin-arm64": () => require("@moggie/native-darwin-arm64"),
+		"linux-x64-gnu": () => require("@moggie/native-linux-x64-gnu"),
+		"linux-arm64-gnu": () => require("@moggie/native-linux-arm64-gnu"),
 	},
 	debug: () => require("../index.node"),
 })

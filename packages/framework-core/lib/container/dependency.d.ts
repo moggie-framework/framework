@@ -15,7 +15,7 @@
  */
 
 import type { Container } from "./resolver"
-import type { Class } from "@voyage/helpers/types"
+import type { Class } from "@moggie/helpers/types"
 
 export class DependencyBuilder {
 	constructor(name: string, container: Container)

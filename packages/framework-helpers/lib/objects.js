@@ -220,6 +220,6 @@ export function deferProxyImplementation(realTarget) {
 		},
 		setPrototypeOf(_, v) {
 			return Reflect.setPrototypeOf(realTarget, v)
-		}
+		},
 	}
 }

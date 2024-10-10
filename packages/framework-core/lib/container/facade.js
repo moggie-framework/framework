@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { resolveName } from "@voyage/helpers"
+import { resolveName } from "@moggie/helpers"
 import { container } from "./resolver.js"
 
 /**

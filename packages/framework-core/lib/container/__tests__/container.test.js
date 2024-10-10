@@ -17,7 +17,7 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 import { container, Container, containerContext } from "../resolver.js"
-import { alias, depends } from "@voyage/helpers"
+import { alias, depends } from "@moggie/helpers"
 
 describe("Container resolution", () => {
 	it("Undecorated functions are passed a container ref when resolved dynamically", async () => {

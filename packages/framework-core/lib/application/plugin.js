@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { bind, setClassName } from "@voyage/helpers"
+import { bind, setClassName } from "@moggie/helpers"
 
 export class Plugin {
 	/**

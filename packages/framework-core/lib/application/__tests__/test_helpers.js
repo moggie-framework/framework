@@ -17,7 +17,7 @@
 import { containerContext } from "../../container/resolver.js"
 import { Application } from "../application.js"
 import { Kernel } from "../kernel.js"
-import { setNestedValue } from "@voyage/helpers"
+import { setNestedValue } from "@moggie/helpers"
 
 /**
  * @callback TestFunction

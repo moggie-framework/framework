@@ -15,7 +15,7 @@
  */
 
 import { Manager } from "../../manager/manager.js"
-import { depends } from "@voyage/helpers"
+import { depends } from "@moggie/helpers"
 import { FetchHttpClient } from "./fetch_client.js"
 
 @depends("config")

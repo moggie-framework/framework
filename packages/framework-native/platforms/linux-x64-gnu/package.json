@@ -1,6 +1,6 @@
 {
-  "name": "@voyage/native-linux-x64-gnu",
-  "description": "Prebuilt binary package for `@voyage/native` on `linux-x64-gnu`.",
+  "name": "@moggie/native-linux-x64-gnu",
+  "description": "Prebuilt binary package for `@moggie/native` on `linux-x64-gnu`.",
   "version": "0.1.0",
   "os": [
     "linux"

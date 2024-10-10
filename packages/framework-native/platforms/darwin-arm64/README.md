@@ -1,3 +1,3 @@
-# `@voyage/native-darwin-arm64`
+# `@moggie/native-darwin-arm64`
 
-Prebuilt binary package for `@voyage/native` on `darwin-arm64`.
+Prebuilt binary package for `@moggie/native` on `darwin-arm64`.
