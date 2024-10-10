@@ -17,8 +17,9 @@
 import assert from "node:assert/strict"
 import { describe, it } from "node:test"
 import {
+	createCallable,
 	createCallableAccessor,
-	deepAssign,
+	deepAssign, deferProxyImplementation,
 	getNestedValue,
 	isPlainObject,
 } from "../objects.js"
@@ -282,5 +283,127 @@ describe("Callable accessor", () => {
 		}
 		const accessor = createCallableAccessor(obj, { shouldReplaceNull: true })
 		assert.strictEqual(accessor.a.b.c, "value")
+	})
+})
+
+
+describe("Generic Callable", () => {
+	it("Makes a constructed class instance callable", () => {
+		class CallableClass {
+			constructor() {
+				return createCallable(this)
+      }
+			__call() {}
+		}
+
+		const inst = new CallableClass()
+		assert.doesNotThrow(() => inst())
+	})
+
+	it("Does not interfere with standard class behaviours", () => {
+		class CallableClass {
+      constructor() {
+				this.foobar = 890
+				return createCallable(this)
+			}
+      method() { return 123 }
+			__call() {}
+    }
+
+    const inst = new CallableClass()
+		assert.equal(inst.method(), 123)
+		assert.equal(inst.foobar, 890)
+	})
+
+	it("Passes parameters to the __call method", (t) => {
+		t.plan(3)
+
+		class CallableClass {
+			constructor() {
+				return createCallable(this)
+			}
+
+			double(value) { return value * 2 }
+
+			__call(first, second) {
+				t.assert.equal(first, 100)
+				t.assert.equal(this.double(second), 300)
+
+				return first + this.double(second)
+			}
+		}
+
+		const inst = new CallableClass()
+		t.assert.equal(inst(100, 150), 400)
+	})
+
+	it("Inherits callability from parent class", () => {
+		class ParentClass {
+      constructor() {
+        return createCallable(this)
+      }
+
+      parentMethod() { return "parent method" }
+
+      __call() {}
+    }
+
+    class ChildClass extends ParentClass {
+      childMethod() { return "child method" }
+    }
+
+    const parentInst = new ParentClass()
+    const childInst = new ChildClass()
+
+    assert.equal(parentInst.parentMethod(), "parent method")
+    assert.equal(childInst.childMethod(), "child method")
+
+    assert.doesNotThrow(() => parentInst())
+    assert.doesNotThrow(() => childInst())
+	})
+
+	it("Child constructor maintains callability", () => {
+		class ParentClass {
+      constructor() {
+        return createCallable(this)
+      }
+      __call() { return "parent method" }
+    }
+
+    class ChildClass extends ParentClass {
+      constructor() {
+        super()
+      }
+      __call() {
+        return "child method"
+      }
+    }
+
+    const parentInst = new ParentClass()
+    const childInst = new ChildClass()
+
+    assert.doesNotThrow(() => parentInst())
+    assert.doesNotThrow(() => childInst())
+	})
+
+	it("Supports overriding __call method in inheritance chain", () => {
+		class ParentClass {
+			constructor() {
+        return createCallable(this)
+      }
+			__call() { return "parent method" }
+		}
+
+		class ChildClass extends ParentClass {
+			__call() {
+				return "child method"
+			}
+		}
+
+		const parentInst = new ParentClass()
+		const childInst = new ChildClass()
+
+    assert.equal(parentInst(), "parent method")
+		assert.equal(childInst(), "child method")
 	})
 })

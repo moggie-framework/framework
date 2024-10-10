@@ -164,3 +164,62 @@ export function createCallableAccessor(obj, opts) {
 		},
 	})
 }
+
+export function createCallable(classInstance) {
+	const callable = new Function()
+	callable.prototype = classInstance.constructor
+
+	return new Proxy(callable, {
+		...deferProxyImplementation(classInstance),
+		apply(target, thisArg, argArray) {
+			if (classInstance.__call) {
+				return classInstance.__call(...argArray)
+			}
+			return Reflect.apply(target, thisArg, argArray)
+		},
+	})
+}
+
+export function deferProxyImplementation(realTarget) {
+	return {
+		has(_, prop) {
+			return Reflect.has(realTarget, prop)
+		},
+		get(_, prop) {
+			return Reflect.get(realTarget, prop)
+		},
+		set(_, p, newValue, receiver) {
+			return Reflect.set(realTarget, p, newValue, receiver)
+		},
+		apply(_, thisArg, argArray) {
+			return Reflect.apply(realTarget, thisArg, argArray)
+		},
+		construct(_, argArray, newTarget) {
+			return Reflect.construct(realTarget, argArray, newTarget)
+		},
+		defineProperty(_, property, attributes) {
+			return Reflect.defineProperty(realTarget, property, attributes)
+		},
+		deleteProperty(_, p) {
+			return Reflect.deleteProperty(realTarget, p)
+		},
+		ownKeys(_) {
+			return Reflect.ownKeys(realTarget)
+		},
+		getOwnPropertyDescriptor(_, p) {
+			return Reflect.getOwnPropertyDescriptor(realTarget, p)
+		},
+		isExtensible(_) {
+			return Reflect.isExtensible(realTarget)
+		},
+		preventExtensions(_) {
+			return Reflect.preventExtensions(realTarget)
+		},
+		getPrototypeOf(_) {
+			return Reflect.getPrototypeOf(realTarget)
+		},
+		setPrototypeOf(_, v) {
+			return Reflect.setPrototypeOf(realTarget, v)
+		}
+	}
+}
