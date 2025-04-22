@@ -18,7 +18,7 @@
 		"@moggie/helpers": "^0.1.0",
 		"@moggie/runtime": "^0.1.0"
 	},
-	"author": "Louis Capitanchik <louis@microhacks.co.uk>",
+	"author": "Louis Capitanchik <louis@weirdboi.com>",
 	"license": "Apache-2.0",
 	"repository": "https://github.com/moggie-framework/framework",
 	"exports": {

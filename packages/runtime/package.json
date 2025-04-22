@@ -13,7 +13,7 @@
 		"stage-3",
 		"decorators"
 	],
-	"author": "Louis Capitanchik <louis@microhacks.co.uk>",
+	"author": "Louis Capitanchik <louis@weirdboi.com>",
 	"license": "Apache-2.0",
 	"repository": "https://github.com/moggie-framework/framework",
 	"dependencies": {

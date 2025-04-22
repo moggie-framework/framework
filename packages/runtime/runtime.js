@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 MicroHacks
+ * Copyright 2024 Weird Boi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import { readFile } from "node:fs/promises"
 import { transform } from "@swc/core"
-/** import { LoadHook } from 'node:module' */
+/** import type { LoadHook } from 'node:module' */
 
 const supportedFileGlobs = [".js", ".jsx", ".ts", ".tsx"]
 
