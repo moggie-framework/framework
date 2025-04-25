@@ -6,6 +6,7 @@ env:
   DEBUG: napi:*
   APP_NAME: runtime-native
   MACOSX_DEPLOYMENT_TARGET: '10.13'
+  subdir: "${{ github.workspace }}/packages/runtime-native"
 permissions:
   contents: write
   id-token: write
@@ -94,7 +95,7 @@ jobs:
         if: ${{ matrix.settings.docker }}
         with:
           image: ${{ matrix.settings.docker }}
-          options: '--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build'
+          options: '--user 0:0 -v ${{ env.subdir }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ env.subdir }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ env.subdir }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ env.subdir }}:/build -w /build'
           run: ${{ matrix.settings.build }}
       - name: Build
         run: ${{ matrix.settings.build }}
