@@ -117,7 +117,10 @@ describe("App plugin system", () => {
 			app.register(
 				preLaunch(async container => {
 					const innerApp = await container.resolve("app")
-					assert.ok(innerApp === app, "Container context does not contain the app instance")
+					assert.ok(
+						innerApp === app,
+						"Container context does not contain the app instance",
+					)
 					plan()
 				}),
 			)

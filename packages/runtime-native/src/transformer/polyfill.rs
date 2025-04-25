@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 use oxc::allocator::{Allocator, Dummy, FromIn, Vec as AstVec};
-use oxc::ast::ast::{ImportDeclaration, ImportDeclarationSpecifier, ImportOrExportKind, Program, Statement};
+use oxc::ast::ast::{
+	ImportDeclaration, ImportDeclarationSpecifier, ImportOrExportKind, Program, Statement,
+};
 use oxc::ast::{AstBuilder, NONE};
 use oxc::span::{Atom, Span};
 
@@ -40,23 +42,32 @@ pub fn inject_polyfill_import<'b, 'a: 'b>(alloc: &'a Allocator, program: &'b mut
 		);
 		let idx = insertion_index(&program.body);
 		if let Some(idx) = idx {
-			program.body.insert(idx, Statement::ImportDeclaration(import));
+			program
+				.body
+				.insert(idx, Statement::ImportDeclaration(import));
 		} else {
 			program.body.push(Statement::ImportDeclaration(import));
 		}
 	}
 }
 
-fn import<'b, 'a: 'b>(alloc: &'a Allocator, builder: &'b AstBuilder<'a>, name: &str) -> ImportDeclarationSpecifier<'a> {
+fn import<'b, 'a: 'b>(
+	alloc: &'a Allocator,
+	builder: &'b AstBuilder<'a>,
+	name: &str,
+) -> ImportDeclarationSpecifier<'a> {
 	builder.import_declaration_specifier_import_specifier(
-        Span::dummy(alloc),
-        builder.module_export_name_identifier_name(Span::dummy(alloc), Atom::from_in(name, alloc)),
-        builder.binding_identifier(Span::dummy(alloc), Atom::from_in(name, alloc)),
-        ImportOrExportKind::Value,
-    )
+		Span::dummy(alloc),
+		builder.module_export_name_identifier_name(Span::dummy(alloc), Atom::from_in(name, alloc)),
+		builder.binding_identifier(Span::dummy(alloc), Atom::from_in(name, alloc)),
+		ImportOrExportKind::Value,
+	)
 }
 
-pub fn import_set<'b, 'a: 'b>(alloc: &'a Allocator, builder: &'b AstBuilder<'a>) -> AstVec<'a, ImportDeclarationSpecifier<'a>> {
+pub fn import_set<'b, 'a: 'b>(
+	alloc: &'a Allocator,
+	builder: &'b AstBuilder<'a>,
+) -> AstVec<'a, ImportDeclarationSpecifier<'a>> {
 	let mut vec = AstVec::new_in(alloc);
 	vec.push(import(alloc, builder, SET_INIT_SIGIL));
 	vec.push(import(alloc, builder, RUN_INIT_SIGIL));

@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 use napi::Result;
-use oxc::allocator::{FromIn, Vec as AstVec};
 use oxc::allocator::{Allocator, CloneIn, Dummy};
-use oxc::ast::ast::{Argument, Class, ClassElement, Decorator, Expression, MethodDefinitionKind, Program, Statement, TSType, TSTypeParameterInstantiation};
+use oxc::allocator::{FromIn, Vec as AstVec};
+use oxc::ast::ast::{
+	Argument, Class, ClassElement, Decorator, Expression, MethodDefinitionKind, Program, Statement,
+	TSType, TSTypeParameterInstantiation,
+};
 use oxc::ast::{AstBuilder, NONE};
 use oxc::codegen::{Codegen, CodegenOptions};
 use oxc::parser::{Parser, ParserReturn};
+use oxc::semantic::SemanticBuilder;
 use oxc::span::{Atom, SourceType, Span};
+use oxc::transformer::{EnvOptions, TransformOptions, Transformer};
 use std::fmt::Debug;
 use std::path::Path;
-use oxc::semantic::SemanticBuilder;
-use oxc::transformer::{EnvOptions, TransformOptions, Transformer};
 
-mod polyfill;
 mod decorators;
+mod polyfill;
 mod utils;
 
 #[napi]
@@ -105,12 +108,16 @@ impl ModuleTransformer {
 			.with_check_syntax_error(true)
 			.build(&program);
 
-		let _ = Transformer::new(&self.alloc, &source_path, &TransformOptions {
-			cwd: source_dir,
-			env: EnvOptions::from_target("es2022").unwrap(),
-			..Default::default()
-		})
-			.build_with_scoping(result.semantic.into_scoping(), &mut program);
+		let _ = Transformer::new(
+			&self.alloc,
+			&source_path,
+			&TransformOptions {
+				cwd: source_dir,
+				env: EnvOptions::from_target("es2022").unwrap(),
+				..Default::default()
+			},
+		)
+		.build_with_scoping(result.semantic.into_scoping(), &mut program);
 
 		let output = Codegen::new()
 			.with_options(CodegenOptions {
@@ -151,9 +158,9 @@ fn transform_module<'a>(mut result: ParserReturn<'a>, alloc: &'a Allocator) -> P
 }
 
 fn requires_decorator<'a, 'b: 'a>(class: &'b Class<'a>) -> bool {
-	!class.decorators.iter().any(|decorator| {
-		matches!(decorator.name(), Some(name) if name.eq_ignore_ascii_case("depends"))
-	})
+	!class.decorators.iter().any(
+		|decorator| matches!(decorator.name(), Some(name) if name.eq_ignore_ascii_case("depends")),
+	)
 }
 
 fn extract_injectable_class_constructor<'b, 'a: 'b>(
@@ -203,8 +210,8 @@ fn extract_injectable_class_constructor<'b, 'a: 'b>(
 						TSType::TSTypeReference(ref ref_type) => {
 							let name = format!("{}", ref_type.type_name);
 							injects.push(name);
-                        }
-                        _ => {}
+						}
+						_ => {}
 					}
 				}
 			}
@@ -236,4 +243,3 @@ fn extract_injectable_class_constructor<'b, 'a: 'b>(
 		))
 	}
 }
-
