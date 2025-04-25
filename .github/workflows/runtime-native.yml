@@ -13,6 +13,7 @@ permissions:
   push:
     branches:
       - trunk
+      - feature/custom-runtime
     tags-ignore:
       - '**'
     paths-ignore:
